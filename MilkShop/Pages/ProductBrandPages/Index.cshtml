@@ -1,0 +1,84 @@
+﻿@page
+@model MilkShop.Pages.ProductBrandPages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].ProductBrandName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].LogoUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].WebsiteUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].CountryOfOrigin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].ContactEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductBrand[0].Address)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ProductBrand) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductBrandName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LogoUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WebsiteUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CountryOfOrigin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ProductBrandId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ProductBrandId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ProductBrandId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

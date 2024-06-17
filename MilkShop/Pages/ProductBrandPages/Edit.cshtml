@@ -1,0 +1,75 @@
+﻿@page
+@model MilkShop.Pages.ProductBrandPages.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ProductBrand</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductBrand.ProductBrandId" />
+            <div class="form-group">
+                <label asp-for="ProductBrand.ProductBrandName" class="control-label"></label>
+                <input asp-for="ProductBrand.ProductBrandName" class="form-control" />
+                <span asp-validation-for="ProductBrand.ProductBrandName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.Status" class="control-label"></label>
+                <input asp-for="ProductBrand.Status" class="form-control" />
+                <span asp-validation-for="ProductBrand.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.CreatedDate" class="control-label"></label>
+                <input asp-for="ProductBrand.CreatedDate" class="form-control" />
+                <span asp-validation-for="ProductBrand.CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.Description" class="control-label"></label>
+                <input asp-for="ProductBrand.Description" class="form-control" />
+                <span asp-validation-for="ProductBrand.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.LogoUrl" class="control-label"></label>
+                <input asp-for="ProductBrand.LogoUrl" class="form-control" />
+                <span asp-validation-for="ProductBrand.LogoUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.WebsiteUrl" class="control-label"></label>
+                <input asp-for="ProductBrand.WebsiteUrl" class="form-control" />
+                <span asp-validation-for="ProductBrand.WebsiteUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.CountryOfOrigin" class="control-label"></label>
+                <input asp-for="ProductBrand.CountryOfOrigin" class="form-control" />
+                <span asp-validation-for="ProductBrand.CountryOfOrigin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.ContactEmail" class="control-label"></label>
+                <input asp-for="ProductBrand.ContactEmail" class="form-control" />
+                <span asp-validation-for="ProductBrand.ContactEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductBrand.Address" class="control-label"></label>
+                <input asp-for="ProductBrand.Address" class="form-control" />
+                <span asp-validation-for="ProductBrand.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

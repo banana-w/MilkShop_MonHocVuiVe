@@ -1,0 +1,84 @@
+﻿@page
+@model MilkShop.Pages.ProductCategoryPages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].ProductCategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].ProductCategoryDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].UpdatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].ThumbnailImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].CategoryLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].MetaKeywords)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategory[0].CategoryCode)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ProductCategory) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductCategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductCategoryDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThumbnailImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MetaKeywords)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryCode)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ProductCategoryId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ProductCategoryId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ProductCategoryId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
