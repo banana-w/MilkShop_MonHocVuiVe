@@ -1,6 +1,6 @@
-﻿using MilkShop.Data.Models;
+﻿using MilkShop.Data;
+using MilkShop.Data.Models;
 using MilkShopBusiness.Base;
-using MilkShopData.DAO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,20 +21,19 @@ namespace MilkShopBusiness.ProductBusiness
 
     public class ProductBusiness : IProductBusiness
     {
-        private readonly ProductDAO _DAO;
-
+        private readonly UnitOfWork _unitOfWork;
         public ProductBusiness()
         {
-            _DAO = new ProductDAO();
+            _unitOfWork ??= new UnitOfWork();
         }
         public async Task<IBusinessResult> DeleteAsync(int id)
         {
             try
             {
-                var product = await _DAO.GetByIdAsync(id);
+                var product = await _unitOfWork.ProductRepository.GetByIdAsync(id);
                 if (product != null)
                 {
-                    var result = await _DAO.RemoveAsync(product);
+                    var result = await _unitOfWork.ProductRepository.RemoveAsync(product);
                     if (result)
                         return new BusinessResult(1, "success");
                     else
@@ -57,7 +56,7 @@ namespace MilkShopBusiness.ProductBusiness
                 #endregion
 
                 //var currencies = _DAO.GetAll();
-                var products = await _DAO.GetAllAsync();
+                var products = await _unitOfWork.ProductRepository.GetAllAsync();
 
                 if (products == null)
                 {
@@ -83,7 +82,7 @@ namespace MilkShopBusiness.ProductBusiness
         {
             try
             {
-                int result = await _DAO.CreateAsync(product);
+                int result = await _unitOfWork.ProductRepository.CreateAsync(product);
                 if (result > 0)
                 {
                     return new BusinessResult(1, "success");
@@ -103,7 +102,7 @@ namespace MilkShopBusiness.ProductBusiness
         {
             try
             {
-                int result = await _DAO.UpdateAsync(product);
+                int result = await _unitOfWork.ProductRepository.UpdateAsync(product);
                 if (result > 0)
                 {
                     return new BusinessResult(1, "success");

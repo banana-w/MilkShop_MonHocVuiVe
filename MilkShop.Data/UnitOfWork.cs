@@ -1,5 +1,3 @@
-
-﻿using MilkShop.Data.DAO;
 using MilkShop.Data.Models;
 
 using MilkShop.Data.Repository;
@@ -17,6 +15,7 @@ namespace MilkShop.Data
         private MilkShopContext _unitOfWorkContext;
         private ProductBrandRepository _productBrand;
         private ProductCategoryRepository _productCategoryRepository;
+        private ProductRepository _productRepository;
         public UnitOfWork() { }
 
         public ProductCategoryRepository ProductCategoryRepository
@@ -26,12 +25,18 @@ namespace MilkShop.Data
                 return _productCategoryRepository ??= new ProductCategoryRepository();
             }
         }
-
         public ProductBrandRepository ProductBrandRepository
         {
             get
             {
                 return _productBrand ??= new ProductBrandRepository();
+            }
+        }
+        public ProductRepository ProductRepository
+        {
+            get
+            {
+                return _productRepository ??= new ProductRepository();
             }
         }
     }
