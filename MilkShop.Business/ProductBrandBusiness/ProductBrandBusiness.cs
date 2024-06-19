@@ -1,4 +1,5 @@
-﻿using MilkShop.Data;
+﻿using Azure;
+using MilkShop.Data;
 using MilkShop.Data.Models;
 using MilkShopBusiness.Base;
 using System;
@@ -11,11 +12,12 @@ namespace MilkShopBusiness.ProductBrandBusiness
 {
     public interface IProductBrandBusiness
     {
-        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetAll(int page, int size);
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> UpdateAsync(ProductBrand productBrand);
         Task<IBusinessResult> Save(ProductBrand productBrand);
         Task<IBusinessResult> DeleteAsync(int id);
+        Task<IBusinessResult> Search(string searchTerm, int page, int size);
 
     }
     public class ProductBrandBusiness : IProductBrandBusiness
@@ -34,11 +36,15 @@ namespace MilkShopBusiness.ProductBrandBusiness
             throw new NotImplementedException();
         }
 
-        public async Task<IBusinessResult> GetAll()
+        public async Task<IBusinessResult> GetAll(int page, int size)
         {
             try
             {
-                var productBrands = await _unitOfWork.ProductBrandRepository.GetAllAsync();
+                var productBrands = await _unitOfWork.ProductBrandRepository.GetPagingListAsync(
+                    selector: x => x,
+                    page: page,
+                    size: size
+                    );
                 if (productBrands != null)
                 {
                     return new BusinessResult(1, "Get all product brands successfully", productBrands);
@@ -85,6 +91,32 @@ namespace MilkShopBusiness.ProductBrandBusiness
                 if (newProductBrand > 1)
                 {
                     return new BusinessResult(1, "Create successfully");
+                }
+                else
+                {
+                    return new BusinessResult(1, "Create fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
+        {
+            try
+            {
+                var productBrands = await _unitOfWork.ProductBrandRepository.GetPagingListAsync(
+                    selector: x => x,
+                    predicate: x => x.ProductBrandName.Contains(searchTerm),
+                    page: page,
+                    size: size
+                    );
+
+                if (productBrands != null)
+                {
+                    return new BusinessResult(1, "Create successfully", productBrands);
                 }
                 else
                 {

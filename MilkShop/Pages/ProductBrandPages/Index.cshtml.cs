@@ -6,23 +6,57 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
+using MilkShopBusiness.ProductBrandBusiness;
 
 namespace MilkShop.Pages.ProductBrandPages
 {
     public class IndexModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductBrandBusiness _productBrandBusiness;
 
-        public IndexModel(MilkShop.Data.Models.MilkShopContext context)
+        public IndexModel(IProductBrandBusiness productBrandBusiness)
         {
-            _context = context;
+            _productBrandBusiness = productBrandBusiness;
         }
+        public Paginate<ProductBrand> ProductBrand { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public int Size { get; set; } = 2;
 
-        public IList<ProductBrand> ProductBrand { get;set; } = default!;
-
-        public async Task OnGetAsync()
+        private async Task<Paginate<ProductBrand>> GetProductBrands()
         {
-            ProductBrand = await _context.ProductBrands.ToListAsync();
+            var result = await _productBrandBusiness.GetAll(PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var productBrands = result.Data;
+                return (Paginate<ProductBrand>)productBrands;
+            }
+            return null;
+        }
+        private async Task<Paginate<ProductBrand>> Search()
+        {
+            var result = await _productBrandBusiness.Search(SearchTerm, PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var productBrands = result.Data;
+                return (Paginate<ProductBrand>)productBrands;
+            }
+            return null;
+        }
+        public async Task OnGetAsync()
+        {   
+            if(!string.IsNullOrEmpty(SearchTerm))
+            {
+                ProductBrand = await Search();
+            }
+            else
+            {
+                ProductBrand = await GetProductBrands();
+            }
         }
     }
 }

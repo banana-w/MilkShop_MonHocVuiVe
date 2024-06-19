@@ -1,4 +1,5 @@
-﻿using MilkShop.Data.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using MilkShop.Data.Base;
 using MilkShop.Data.Models;
 using System;
 using System.Collections.Generic;
