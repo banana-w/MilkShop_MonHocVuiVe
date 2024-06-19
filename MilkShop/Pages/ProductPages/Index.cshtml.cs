@@ -6,25 +6,58 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
+using MilkShopBusiness.ProductBrandBusiness;
+using MilkShopBusiness.ProductBusiness;
 
 namespace MilkShop.Pages.ProductPages
 {
     public class IndexModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductBusiness _productBusiness;
 
-        public IndexModel(MilkShop.Data.Models.MilkShopContext context)
+        public IndexModel(IProductBusiness productBusiness)
         {
-            _context = context;
+            _productBusiness = productBusiness;
         }
+        public Paginate<Product> Product { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public int Size { get; set; } = 5;
 
-        public IList<Product> Product { get;set; } = default!;
-
+        private async Task<Paginate<Product>> GetProduct()
+        {
+            var result = await _productBusiness.GetAll(PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var product = result.Data;
+                return (Paginate<Product>)product;
+            }
+            return null;
+        }
+        private async Task<Paginate<Product>> Search()
+        {
+            var result = await _productBusiness.Search(SearchTerm, PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var product = result.Data;
+                return (Paginate<Product>)product;
+            }
+            return null;
+        }
         public async Task OnGetAsync()
         {
-            Product = await _context.Products
-                .Include(p => p.ProductBrand)
-                .Include(p => p.ProductCategory).ToListAsync();
+            if (!string.IsNullOrEmpty(SearchTerm))
+            {
+                Product = await Search();
+            }
+            else
+            {
+                Product = await GetProduct();
+            }
         }
     }
 }

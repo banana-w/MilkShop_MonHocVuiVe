@@ -25,7 +25,7 @@ namespace MilkShop.Pages.ProductBrandPages
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
         [BindProperty(SupportsGet = true)]
-        public int Size { get; set; } = 2;
+        public int Size { get; set; } = 5;
 
         private async Task<Paginate<ProductBrand>> GetProductBrands()
         {

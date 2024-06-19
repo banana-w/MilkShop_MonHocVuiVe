@@ -2,10 +2,10 @@
 @model MilkShop.Pages.ProductPages.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Product";
 }
 
-<h1>Index</h1>
+<h1>Product</h1>
 
 <p>
     <a asp-page="Create">Create New</a>
@@ -14,37 +14,37 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].ProductName)
+                @Html.DisplayNameFor(model => model.Product.Items[0].ProductName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].ProductDescription)
+                @Html.DisplayNameFor(model => model.Product.Items[0].ProductDescription)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].ProductPrice)
+                @Html.DisplayNameFor(model => model.Product.Items[0].ProductPrice)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].ProductImage)
+                @Html.DisplayNameFor(model => model.Product.Items[0].ProductImage)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].Status)
+                @Html.DisplayNameFor(model => model.Product.Items[0].Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].CreatedDate)
+                @Html.DisplayNameFor(model => model.Product.Items[0].CreatedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].StockQuantity)
+                @Html.DisplayNameFor(model => model.Product.Items[0].StockQuantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].ProductBrand)
+                @Html.DisplayNameFor(model => model.Product.Items[0].ProductBrand)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Product[0].ProductCategory)
+                @Html.DisplayNameFor(model => model.Product.Items[0].ProductCategory)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Product) {
+@foreach (var item in Model.Product.Items) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ProductName)
@@ -82,3 +82,19 @@
 }
     </tbody>
 </table>
+<div>
+    <a asp-page="/ProductBrandPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex - 1)"
+       class="@(Model.PageIndex == 1 ? "disabled" : "") btn btn-primary">Previous</a>
+
+    <span>Page @Model.Product.Page of @Model.Product.TotalPages </span>
+
+    <a asp-page="/ProductBrandPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex + 1)"
+       class="@(Model.PageIndex == Model.Product.TotalPages ? "disabled" : "") btn btn-primary">Next</a>
+</div>
+
+<style>
+    .disabled {
+        pointer-events: none;
+        color: grey;
+    }
+</style>

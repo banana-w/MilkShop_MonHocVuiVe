@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
 using MilkShopBusiness.ProductBrandBusiness;
+using MilkShopBusiness.ProductBusiness;
 
 namespace MilkShop
 {
@@ -15,6 +16,7 @@ namespace MilkShop
             builder.Services.AddDbContext<MilkShopContext>(options
                 => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IProductBrandBusiness, ProductBrandBusiness>();
+            builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
