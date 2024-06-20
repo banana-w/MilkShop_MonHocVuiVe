@@ -6,7 +6,19 @@
 }
 
 <h1>Index</h1>
+@if (ViewData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewData["SuccessMessage"]
+    </div>
+}
 
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
 <p>
     <a asp-page="Create">Create New</a>
 </p>
@@ -14,37 +26,38 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].ProductCategoryName)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].ProductCategoryName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].Status)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].CreatedDate)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].CreatedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].ProductCategoryDescription)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].ProductCategoryDescription)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].UpdatedDate)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].UpdatedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].ThumbnailImage)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].ThumbnailImage)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].CategoryLevel)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].CategoryLevel)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].MetaKeywords)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].MetaKeywords)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductCategory[0].CategoryCode)
+                @Html.DisplayNameFor(model => model.ProductCategories[0].CategoryCode)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.ProductCategory) {
+        @foreach (var item in Model.ProductCategories)
+        {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ProductCategoryName)

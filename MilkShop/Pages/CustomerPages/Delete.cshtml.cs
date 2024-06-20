@@ -5,58 +5,63 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
 
 namespace MilkShop.Pages.CustomerPages
 {
-    public class DeleteModel : PageModel
+    public class DeleteCustomerModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly ICustomerBusiness _customerBusiness;
 
-        public DeleteModel(MilkShop.Data.Models.MilkShopContext context)
+        public DeleteCustomerModel(ICustomerBusiness customerBusiness)
         {
-            _context = context;
+            _customerBusiness = customerBusiness;
         }
 
         [BindProperty]
         public Customer Customer { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FirstOrDefaultAsync(m => m.UserId == id);
+            var result = await _customerBusiness.GetByIdAsync(id);
 
-            if (customer == null)
+            if (result.Status > 0)
             {
-                return NotFound();
+                Customer = result.Data as Customer;
             }
             else
             {
-                Customer = customer;
+                TempData["ErrorMessage"] = result.Message;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer != null)
+            var deleteResult = await _customerBusiness.DeleteAsync(id);
+            if (deleteResult.Status > 0)
             {
-                Customer = customer;
-                _context.Customers.Remove(Customer);
-                await _context.SaveChangesAsync();
+                ViewData["SuccessMessage"] = deleteResult.Message;
+                return RedirectToPage("./Index");
             }
+            else
+            {
+                ViewData["ErrorMessage"] = $"Error: {deleteResult.Message}";
+                return Page();
 
-            return RedirectToPage("./Index");
+            }
         }
     }
 }

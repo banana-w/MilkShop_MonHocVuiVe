@@ -5,17 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
 
 namespace MilkShop.Pages.CustomerPages
 {
-    public class CreateModel : PageModel
+    public class CreateCustomerModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly ICustomerBusiness _customerBusiness;
 
-        public CreateModel(MilkShop.Data.Models.MilkShopContext context)
+        public CreateCustomerModel(ICustomerBusiness customerBusiness)
+
         {
-            _context = context;
+            _customerBusiness = customerBusiness;
         }
 
         public IActionResult OnGet()
@@ -34,10 +36,18 @@ namespace MilkShop.Pages.CustomerPages
                 return Page();
             }
 
-            _context.Customers.Add(Customer);
-            await _context.SaveChangesAsync();
+            var result = await _customerBusiness.Save(Customer);
+            if(result.Status > 0)
+            {
+                ViewData["SuccessMessage"] = result.Message;
+                return RedirectToPage("./Index");
+            }
+            else
+            {
+                ViewData["ErrorMessage"] = $"Error: {result.Message}";
+                return Page();
+            }
 
-            return RedirectToPage("./Index");
         }
     }
 }

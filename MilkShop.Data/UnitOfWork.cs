@@ -16,6 +16,7 @@ namespace MilkShop.Data
         private ProductBrandRepository _productBrand;
         private ProductCategoryRepository _productCategoryRepository;
         private ProductRepository _productRepository;
+        private CustomerRepository _customerRepository;
         public UnitOfWork() { }
 
         public ProductCategoryRepository ProductCategoryRepository
@@ -37,6 +38,13 @@ namespace MilkShop.Data
             get
             {
                 return _productRepository ??= new ProductRepository();
+            }
+        }
+        public CustomerRepository CustomerRepository
+        {
+            get
+            {
+                return _customerRepository ??= new CustomerRepository();
             }
         }
     }
