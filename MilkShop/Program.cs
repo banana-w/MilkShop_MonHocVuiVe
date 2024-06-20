@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductCategoryBusiness;
 
 namespace MilkShop
 {
@@ -11,6 +13,9 @@ namespace MilkShop
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddScoped<ICustomerBusiness, CustomerBusiness>();
+            builder.Services.AddScoped<IProductCategoryBusiness, ProductCategoryBusiness>();
+
             builder.Services.AddSession(options =>
             {
                 // Set a short timeout for easy testing.

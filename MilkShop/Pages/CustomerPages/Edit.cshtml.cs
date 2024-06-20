@@ -6,22 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
-using MilkShopBusiness.ProductCategoryBusiness;
 
-namespace MilkShop.Pages.ProductCategoryPages
+namespace MilkShop.Pages.CustomerPages
 {
-    public class EditModel : PageModel
+    public class EditCustomer : PageModel
     {
-        private readonly IProductCategoryBusiness _productCategoryBusiness;
+        private readonly ICustomerBusiness _customerBusiness;
 
-        public EditModel(IProductCategoryBusiness productCategoryBusiness)
+        public EditCustomer(ICustomerBusiness customerBusiness)
         {
-            _productCategoryBusiness = productCategoryBusiness;
+            _customerBusiness = customerBusiness;
         }
 
         [BindProperty]
-        public ProductCategory ProductCategory { get; set; } = default!;
+        public Customer Customer { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -30,12 +30,12 @@ namespace MilkShop.Pages.ProductCategoryPages
                 return NotFound();
             }
 
-            var productcategory =  await _productCategoryBusiness.GetById(id);
-            if (productcategory == null)
+            var customer =  await _customerBusiness.GetByIdAsync(id);
+            if (customer == null)
             {
                 return NotFound();
             }
-            ProductCategory = productcategory.Data as ProductCategory;
+            Customer = customer.Data as Customer;
             return Page();
         }
 
@@ -47,14 +47,23 @@ namespace MilkShop.Pages.ProductCategoryPages
             {
                 return Page();
             }
-
             try
             {
-                await _productCategoryBusiness.UpdateAsync(ProductCategory);
+                var result = await _customerBusiness.UpdateAsync(Customer);
+                if(result.Status > 0)
+                {
+                    ViewData["SuccessMessage"] = result.Message;
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    ViewData["ErrorMessage"] = result.Message;
+                    return Page();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await ProductCategoryExists(ProductCategory.ProductCategoryId))
+                if (!await CustomerExists(Customer.UserId))
                 {
                     return NotFound();
                 }
@@ -63,14 +72,12 @@ namespace MilkShop.Pages.ProductCategoryPages
                     throw;
                 }
             }
-
-            return RedirectToPage("./Index");
         }
 
-        private async Task<bool> ProductCategoryExists(int id)
+        private async Task<bool> CustomerExists(int id)
         {
-            var productCategory = await _productCategoryBusiness.GetById(id);
-            return productCategory != null && productCategory.Data != null;
+            var customer = await _customerBusiness.GetByIdAsync(id);
+            return customer != null && customer.Data != null;
         }
     }
 }

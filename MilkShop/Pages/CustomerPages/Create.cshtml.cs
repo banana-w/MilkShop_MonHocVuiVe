@@ -5,18 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
-using MilkShopBusiness.ProductCategoryBusiness;
 
-namespace MilkShop.Pages.ProductCategoryPages
+namespace MilkShop.Pages.CustomerPages
 {
-    public class CreateProductCategory : PageModel
+    public class CreateCustomerModel : PageModel
     {
-        private readonly IProductCategoryBusiness _productCategoryBusiness;
+        private readonly ICustomerBusiness _customerBusiness;
 
-        public CreateProductCategory(IProductCategoryBusiness productCategoryBusiness)
+        public CreateCustomerModel(ICustomerBusiness customerBusiness)
+
         {
-            _productCategoryBusiness = productCategoryBusiness;
+            _customerBusiness = customerBusiness;
         }
 
         public IActionResult OnGet()
@@ -25,7 +26,7 @@ namespace MilkShop.Pages.ProductCategoryPages
         }
 
         [BindProperty]
-        public ProductCategory ProductCategory { get; set; } = default!;
+        public Customer Customer { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -35,8 +36,8 @@ namespace MilkShop.Pages.ProductCategoryPages
                 return Page();
             }
 
-            var result = await _productCategoryBusiness.Save(ProductCategory);
-            if(result != null)
+            var result = await _customerBusiness.Save(Customer);
+            if(result.Status > 0)
             {
                 ViewData["SuccessMessage"] = result.Message;
                 return RedirectToPage("./Index");
@@ -46,6 +47,7 @@ namespace MilkShop.Pages.ProductCategoryPages
                 ViewData["ErrorMessage"] = $"Error: {result.Message}";
                 return Page();
             }
+
         }
     }
 }

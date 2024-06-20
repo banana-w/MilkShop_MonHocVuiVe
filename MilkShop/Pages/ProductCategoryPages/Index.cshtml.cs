@@ -6,23 +6,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductCategoryBusiness;
 
 namespace MilkShop.Pages.ProductCategoryPages
 {
     public class IndexModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductCategoryBusiness _productCategoryBusiness;
 
-        public IndexModel(MilkShop.Data.Models.MilkShopContext context)
+        public IndexModel(IProductCategoryBusiness productCategoryBusiness)
         {
-            _context = context;
+            _productCategoryBusiness = productCategoryBusiness;
         }
 
-        public IList<ProductCategory> ProductCategory { get;set; } = default!;
+        [BindProperty]
+        public ProductCategory ProductCategory { get; set; } = default!;
+
+        public List<ProductCategory> ProductCategories { get;set; } = default!;
+
+        private List<ProductCategory> GetProductCategories()
+        {
+            var result = _productCategoryBusiness.GetAll();
+            if (result.Status > 0 && result.Result.Data != null)
+            {
+                var productCate = (List<ProductCategory>)result.Result.Data;
+                return productCate;
+            }
+            return null;
+        }
 
         public async Task OnGetAsync()
         {
-            ProductCategory = await _context.ProductCategories.ToListAsync();
+            ProductCategories = GetProductCategories();
         }
     }
 }

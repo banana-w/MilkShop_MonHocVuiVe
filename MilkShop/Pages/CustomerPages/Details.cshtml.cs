@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
-using MilkShopBusiness.ProductCategoryBusiness;
 
-namespace MilkShop.Pages.ProductCategoryPages
+namespace MilkShop.Pages.CustomerPages
 {
     public class DetailsModel : PageModel
     {
-        private readonly IProductCategoryBusiness _productCategoryBusiness;
+        private readonly ICustomerBusiness _customerBusiness;
 
-        public DetailsModel(IProductCategoryBusiness productCategoryBusiness)
+        public DetailsModel(ICustomerBusiness customerBusiness)
         {
-            _productCategoryBusiness = productCategoryBusiness;
+            _customerBusiness = customerBusiness;
         }
 
-        public ProductCategory ProductCategory { get; set; } = default!;
+        public Customer Customer { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -28,14 +28,14 @@ namespace MilkShop.Pages.ProductCategoryPages
                 return NotFound();
             }
 
-            var productcategory = await _productCategoryBusiness.GetById(id);
-            if (productcategory == null)
+            var customer = await _customerBusiness.GetByIdAsync(id);
+            if (customer == null)
             {
                 return NotFound();
             }
             else
             {
-                ProductCategory = productcategory.Data as ProductCategory;
+                Customer = customer.Data as Customer;
             }
             return Page();
         }

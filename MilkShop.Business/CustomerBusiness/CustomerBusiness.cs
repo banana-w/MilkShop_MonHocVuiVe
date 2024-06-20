@@ -1,0 +1,136 @@
+﻿using Microsoft.EntityFrameworkCore;
+using MilkShop.Data;
+using MilkShop.Data.Models;
+using MilkShopBusiness.Base;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MilkShop.Business.CustomerBusiness
+{
+    public interface ICustomerBusiness
+    {
+        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetByIdAsync(int id);
+        Task<IBusinessResult> UpdateAsync(Customer customer);
+        Task<IBusinessResult> Save(Customer customer);
+        Task<IBusinessResult> DeleteAsync(int id);
+    }
+
+    public class CustomerBusiness : ICustomerBusiness
+    {
+        private readonly UnitOfWork _unitOfWork;
+
+        public CustomerBusiness()
+        {
+            _unitOfWork ??= new UnitOfWork();
+        }
+
+        public async Task<IBusinessResult> DeleteAsync(int id)
+        {
+            try
+            {
+                var order = await _unitOfWork.CustomerRepository.GetByIdAsync(id);
+                if (order != null)
+                {
+                    var deleted = await _unitOfWork.CustomerRepository.RemoveAsync(order);
+                    if (deleted)
+                    {
+                        return new BusinessResult(1, "Delete customer successfully");
+                    }
+                    else
+                    {
+                        return new BusinessResult(0, "Delete customer failed");
+                    }
+                }
+                return new BusinessResult(0, "No content");
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> GetAll()
+        {
+            try
+            {
+                var customer = await _unitOfWork.CustomerRepository.GetAllAsync();
+                if (customer != null)
+                {
+                    return new BusinessResult(1, "Get all customer successfully", customer);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get all customer fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> GetByIdAsync(int id)
+        {
+            try
+            {
+                var customer = await _unitOfWork.CustomerRepository.GetByIdAsync(id);
+                if (customer != null)
+                {
+                    return new BusinessResult(1, "Get customer successfully", customer);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get customer fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> Save(Customer customer)
+        {
+            try
+            {
+                var newCustomer = await _unitOfWork.CustomerRepository.CreateAsync(customer);
+                if (newCustomer > 1)
+                {
+                    return new BusinessResult(1, "Create successfully");
+                }
+                else
+                {
+                    return new BusinessResult(1, "Create fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> UpdateAsync(Customer customer)
+        {
+            try
+            {
+                var updateCustomer = await _unitOfWork.CustomerRepository.UpdateAsync(customer);
+                if (updateCustomer != null)
+                {
+                    return new BusinessResult(1, "Update successfully");
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Update fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+    }
+}
