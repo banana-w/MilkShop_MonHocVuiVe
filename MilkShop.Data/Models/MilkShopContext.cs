@@ -86,6 +86,9 @@ public partial class MilkShopContext : DbContext
                 .HasColumnName("address");
             entity.Property(e => e.CreatedDate).HasColumnName("created_date");
             entity.Property(e => e.DateOfBirth).HasColumnName("date_of_birth");
+            entity.Property(e => e.Password)
+                .HasMaxLength(50)
+                .HasColumnName("password");
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(50)
                 .HasColumnName("phone_number");
@@ -93,10 +96,6 @@ public partial class MilkShopContext : DbContext
                 .HasMaxLength(10)
                 .IsFixedLength()
                 .HasColumnName("preferred_language");
-            entity.Property(e => e.ProfilePictureUrl)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasColumnName("profile_picture_url");
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsFixedLength()
@@ -129,7 +128,9 @@ public partial class MilkShopContext : DbContext
             entity.Property(e => e.OrderTotalAmount)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("orderTotalAmount");
-            entity.Property(e => e.PaymentMethodId).HasColumnName("paymentMethodId");
+            entity.Property(e => e.PaymentMethodId)
+                .HasMaxLength(50)
+                .HasColumnName("paymentMethodId");
             entity.Property(e => e.PaymentStatus)
                 .HasMaxLength(50)
                 .HasColumnName("payment_status");

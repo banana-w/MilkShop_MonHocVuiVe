@@ -79,6 +79,32 @@
         </dd>
     </dl>
 </div>
+<h4>Order Details</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model.OrderDetails)
+        {
+            <tr>
+                <td>@detail.ProductId</td>
+                <td>@detail.ProductQuantity</td>
+                <td>@detail.ProductPrice</td>
+                <td>@detail.OrderdetailPrice</td>
+                <td>@detail.Status</td>
+                <td>@detail.CreateDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Order.OrderId">Edit</a> |
     <a asp-page="./Index">Back to List</a>

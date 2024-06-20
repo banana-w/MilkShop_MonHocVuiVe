@@ -1,8 +1,14 @@
 ﻿@page
+@using MilkShop.Business.OrderBusinesses
+@using MilkShop.Data.CartModel
 @model MilkShop.Pages.OrderPages.CreateModel
 
 @{
     ViewData["Title"] = "Create";
+    ShoppingCart cartData = TempData["CartData"] as ShoppingCart;
+    var totalAmount = (decimal?)TempData["TotalAmount"];
+
+    
 }
 
 <h1>Create</h1>
@@ -15,17 +21,18 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Order.OrderDate" class="control-label"></label>
-                <input asp-for="Order.OrderDate" class="form-control" />
+                <input asp-for="Order.OrderDate" class="form-control"/>
                 <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Order.OrderStatus" class="control-label"></label>
-                <input asp-for="Order.OrderStatus" class="form-control" />
+                <input asp-for="Order.OrderStatus" class="form-control" value="Pending" readonly />
                 <span asp-validation-for="Order.OrderStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Order.OrderTotalAmount" class="control-label"></label>
-                <input asp-for="Order.OrderTotalAmount" class="form-control" />
+                <input asp-for="Order.OrderTotalAmount" class="form-control" value="@totalAmount" readonly />
                 <span asp-validation-for="Order.OrderTotalAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,22 +41,28 @@
             </div>
             <div class="form-group">
                 <label asp-for="Order.PaymentMethodId" class="control-label"></label>
-                <input asp-for="Order.PaymentMethodId" class="form-control" />
+                <select asp-for="Order.PaymentMethodId" class="form-control">
+                    <option value="COD">COD</option>
+                    <option value="PAYPAL">PayPal</option>
+                    <option value="VNPAY">VNPAY</option>
+                    <option value="MOMO">MoMo</option>
+                </select>
                 <span asp-validation-for="Order.PaymentMethodId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Order.PaymentStatus" class="control-label"></label>
-                <input asp-for="Order.PaymentStatus" class="form-control" />
+                <input asp-for="Order.PaymentStatus" class="form-control" value="Unpaid" readonly />
                 <span asp-validation-for="Order.PaymentStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Order.Status" class="control-label"></label>
-                <input asp-for="Order.Status" class="form-control" />
+                <input asp-for="Order.Status" class="form-control" value="New" readonly />
                 <span asp-validation-for="Order.Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Order.CreatedDate" class="control-label"></label>
-                <input asp-for="Order.CreatedDate" class="form-control" />
+                <input asp-for="Order.CreatedDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
                 <span asp-validation-for="Order.CreatedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -64,9 +77,27 @@
             </div>
             <div class="form-group">
                 <label asp-for="Order.ShippingMethod" class="control-label"></label>
-                <input asp-for="Order.ShippingMethod" class="form-control" />
+                <select asp-for="Order.ShippingMethod" class="form-control">
+                    <option value="Standard">Standard</option>
+                    <option value="Express">Express</option>
+                    <option value="Overnight">Overnight</option>
+                </select>
                 <span asp-validation-for="Order.ShippingMethod" class="text-danger"></span>
             </div>
+
+            <h4>Products in Order</h4>
+            <hr />
+            <div class="form-group">
+                <label><strong>Products:</strong></label>
+                <ul>
+                    @foreach (var item in cartData.Items)
+                    {
+                        <li>@item.ProductName - Quantity: @item.Quantity - Price: @item.ProductPrice</li>
+                        <input type="hidden" asp-for="Order.OrderDetails" value="@item.ProductId" />
+                    }
+                </ul>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
