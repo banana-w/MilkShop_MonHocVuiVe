@@ -1,12 +1,24 @@
 ﻿@page
-@model MilkShop.Pages.CustomerPages.EditModel
+@model MilkShop.Pages.CustomerPages.EditCustomer
 
 @{
     ViewData["Title"] = "Edit";
 }
 
 <h1>Edit</h1>
+@if (ViewData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewData["SuccessMessage"]
+    </div>
+}
 
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
 <h4>Customer</h4>
 <hr />
 <div class="row">
@@ -50,9 +62,9 @@
                 <span asp-validation-for="Customer.DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Customer.ProfilePictureUrl" class="control-label"></label>
-                <input asp-for="Customer.ProfilePictureUrl" class="form-control" />
-                <span asp-validation-for="Customer.ProfilePictureUrl" class="text-danger"></span>
+                <label asp-for="Customer.Password" class="control-label"></label>
+                <input asp-for="Customer.Password" class="form-control" />
+                <span asp-validation-for="Customer.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Customer.PreferredLanguage" class="control-label"></label>

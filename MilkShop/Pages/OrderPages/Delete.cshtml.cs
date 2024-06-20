@@ -12,10 +12,12 @@ namespace MilkShop.Pages.OrderPages
     public class DeleteModel : PageModel
     {
         private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly MilkShop.Business.OrderBusinesses.IOrderBusiness _orderBusiness;
 
-        public DeleteModel(MilkShop.Data.Models.MilkShopContext context)
+        public DeleteModel(MilkShop.Data.Models.MilkShopContext context, Business.OrderBusinesses.IOrderBusiness orderBusiness)
         {
             _context = context;
+            _orderBusiness = orderBusiness;
         }
 
         [BindProperty]
@@ -28,7 +30,8 @@ namespace MilkShop.Pages.OrderPages
                 return NotFound();
             }
 
-            var order = await _context.Orders.FirstOrDefaultAsync(m => m.OrderId == id);
+            //var order = await _context.Orders.FirstOrDefaultAsync(m => m.OrderId == id);
+            var order = (Order)(await _orderBusiness.GetById(id.Value)).Data;
 
             if (order == null)
             {
@@ -48,12 +51,12 @@ namespace MilkShop.Pages.OrderPages
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            //var order = await _context.Orders.FindAsync(id);
+            var order = (Order)(await _orderBusiness.GetById(id.Value)).Data;
             if (order != null)
             {
                 Order = order;
-                _context.Orders.Remove(Order);
-                await _context.SaveChangesAsync();
+               await _orderBusiness.DeleteAsync(id.Value);
             }
 
             return RedirectToPage("./Index");

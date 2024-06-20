@@ -1,0 +1,46 @@
+﻿@page
+@model ViewCartModel
+
+@{
+    ViewData["Title"] = "View Cart";
+}
+
+<h1>Shopping Cart</h1>
+
+@if (Model.Cart == null || Model.Cart.Items.Count == 0)
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Cart.Items)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.ProductPrice</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.ProductPrice * item.Quantity)</td>
+                    <td>
+                        <a asp-page="./RemoveFromCart" asp-route-id="@item.ProductId">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3>Total: @Model.Cart.GetTotal()</h3>
+    <form method="post" asp-page-handler="Checkout">
+        <input type="submit" value="Checkout" class="btn btn-primary" />
+    </form>
+
+}

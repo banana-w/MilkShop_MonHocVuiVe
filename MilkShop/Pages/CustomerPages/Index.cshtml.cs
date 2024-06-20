@@ -5,24 +5,40 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
 
 namespace MilkShop.Pages.CustomerPages
 {
-    public class IndexModel : PageModel
+    public class CustomerModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly ICustomerBusiness _customerBusiness;
 
-        public IndexModel(MilkShop.Data.Models.MilkShopContext context)
+        public CustomerModel(ICustomerBusiness customerBusiness)
         {
-            _context = context;
+            _customerBusiness = customerBusiness;
         }
 
-        public IList<Customer> Customer { get;set; } = default!;
+        public string Message { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        [BindProperty]
+        public Customer Customer { get; set; } = default!;
+
+        public List<Customer> Customers { get; set; } = default!;
+
+        private List<Customer> GetCustomers()
         {
-            Customer = await _context.Customers.ToListAsync();
+            var result = _customerBusiness.GetAll();
+            if(result.Status > 0 && result.Result.Data != null)
+            {
+                var customer = (List<Customer>)result.Result.Data;
+                return customer;
+            }
+            return null;
+        }
+        public void OnGet()
+        {
+            Customers = GetCustomers();
         }
     }
 }

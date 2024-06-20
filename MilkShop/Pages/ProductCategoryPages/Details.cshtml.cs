@@ -6,35 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductCategoryBusiness;
 
 namespace MilkShop.Pages.ProductCategoryPages
 {
     public class DetailsModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductCategoryBusiness _productCategoryBusiness;
 
-        public DetailsModel(MilkShop.Data.Models.MilkShopContext context)
+        public DetailsModel(IProductCategoryBusiness productCategoryBusiness)
         {
-            _context = context;
+            _productCategoryBusiness = productCategoryBusiness;
         }
 
         public ProductCategory ProductCategory { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var productcategory = await _context.ProductCategories.FirstOrDefaultAsync(m => m.ProductCategoryId == id);
+            var productcategory = await _productCategoryBusiness.GetById(id);
             if (productcategory == null)
             {
                 return NotFound();
             }
             else
             {
-                ProductCategory = productcategory;
+                ProductCategory = productcategory.Data as ProductCategory;
             }
             return Page();
         }

@@ -7,34 +7,35 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductCategoryBusiness;
 
 namespace MilkShop.Pages.ProductCategoryPages
 {
     public class EditModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductCategoryBusiness _productCategoryBusiness;
 
-        public EditModel(MilkShop.Data.Models.MilkShopContext context)
+        public EditModel(IProductCategoryBusiness productCategoryBusiness)
         {
-            _context = context;
+            _productCategoryBusiness = productCategoryBusiness;
         }
 
         [BindProperty]
         public ProductCategory ProductCategory { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var productcategory =  await _context.ProductCategories.FirstOrDefaultAsync(m => m.ProductCategoryId == id);
+            var productcategory =  await _productCategoryBusiness.GetById(id);
             if (productcategory == null)
             {
                 return NotFound();
             }
-            ProductCategory = productcategory;
+            ProductCategory = productcategory.Data as ProductCategory;
             return Page();
         }
 
@@ -47,15 +48,13 @@ namespace MilkShop.Pages.ProductCategoryPages
                 return Page();
             }
 
-            _context.Attach(ProductCategory).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _productCategoryBusiness.UpdateAsync(ProductCategory);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductCategoryExists(ProductCategory.ProductCategoryId))
+                if (!await ProductCategoryExists(ProductCategory.ProductCategoryId))
                 {
                     return NotFound();
                 }
@@ -68,9 +67,10 @@ namespace MilkShop.Pages.ProductCategoryPages
             return RedirectToPage("./Index");
         }
 
-        private bool ProductCategoryExists(int id)
+        private async Task<bool> ProductCategoryExists(int id)
         {
-            return _context.ProductCategories.Any(e => e.ProductCategoryId == id);
+            var productCategory = await _productCategoryBusiness.GetById(id);
+            return productCategory != null && productCategory.Data != null;
         }
     }
 }

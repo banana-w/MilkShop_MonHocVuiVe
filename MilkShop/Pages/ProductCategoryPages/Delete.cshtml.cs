@@ -6,57 +6,56 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductCategoryBusiness;
 
 namespace MilkShop.Pages.ProductCategoryPages
 {
     public class DeleteModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductCategoryBusiness _productCategoryBusiness;
 
-        public DeleteModel(MilkShop.Data.Models.MilkShopContext context)
+        public DeleteModel(IProductCategoryBusiness productCategoryBusiness)
         {
-            _context = context;
+            _productCategoryBusiness = productCategoryBusiness;
         }
 
         [BindProperty]
         public ProductCategory ProductCategory { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var productcategory = await _context.ProductCategories.FirstOrDefaultAsync(m => m.ProductCategoryId == id);
+            var productcategory = await _productCategoryBusiness.GetById(id);
 
-            if (productcategory == null)
+            if(productcategory.Status > 0)
             {
-                return NotFound();
-            }
-            else
-            {
-                ProductCategory = productcategory;
+                ProductCategory = productcategory.Data as ProductCategory;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var productcategory = await _context.ProductCategories.FindAsync(id);
-            if (productcategory != null)
+            var productcategory = await _productCategoryBusiness.DeleteAsync(id);
+            if (productcategory.Status > 0)
             {
-                ProductCategory = productcategory;
-                _context.ProductCategories.Remove(ProductCategory);
-                await _context.SaveChangesAsync();
+                ViewData["SuccessMessage"] = productcategory.Message;
+                return RedirectToPage("./Index");
             }
-
-            return RedirectToPage("./Index");
+            else
+            {
+                ViewData["ErrorMessage"] = productcategory.Message;
+                return Page();
+            }
         }
     }
 }

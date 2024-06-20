@@ -29,9 +29,33 @@ namespace MilkShopBusiness.ProductCategoryBusiness
             _unitOfWork ??= new UnitOfWork();
         }
        
-        public Task<IBusinessResult> DeleteAsync(int id)
+        public async Task<IBusinessResult> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var productCategory = await _unitOfWork.ProductCategoryRepository.GetByIdAsync(id);
+                if (productCategory != null)
+                {
+                    var productCategoryDelete = await _unitOfWork.ProductCategoryRepository.RemoveAsync(productCategory);
+                    if(productCategoryDelete)
+                    {
+                        return new BusinessResult(1, "Delete product categories successfully", productCategory);
+                    }
+                    else
+                    {
+                        return new BusinessResult(-1, "Delete product categories failed");
+
+                    }
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get product categories fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
         }
 
         public async Task<IBusinessResult> GetAll()

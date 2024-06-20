@@ -96,6 +96,10 @@ public partial class MilkShopContext : DbContext
                 .HasMaxLength(10)
                 .IsFixedLength()
                 .HasColumnName("preferred_language");
+            entity.Property(e => e.Password)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("password");
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsFixedLength()

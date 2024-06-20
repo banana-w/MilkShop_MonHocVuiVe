@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductCategoryBusiness;
 using MilkShopBusiness.ProductBrandBusiness;
 using MilkShopBusiness.ProductBusiness;
 
@@ -13,6 +15,18 @@ namespace MilkShop
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddScoped<ICustomerBusiness, CustomerBusiness>();
+            builder.Services.AddScoped<IProductCategoryBusiness, ProductCategoryBusiness>();
+
+            builder.Services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+                options.Cookie.HttpOnly = true; // Ensure the cookie is accessible only to the server.
+                options.Cookie.IsEssential = true; // Make the session cookie essential.
+            });
+            builder.Services.AddScoped<MilkShop.Business.OrderBusinesses.IOrderBusiness, MilkShop.Business.OrderBusinesses.OrderBusiness>();
+            builder.Services.AddScoped<MilkShop.Business.OrderDetailBusinesses.IOrderDetailBusiness, MilkShop.Business.OrderDetailBusinesses.OrderDetailBusiness>();
             builder.Services.AddDbContext<MilkShopContext>(options
                 => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IProductBrandBusiness, ProductBrandBusiness>();
@@ -33,7 +47,7 @@ namespace MilkShop
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.MapRazorPages();
 
             app.Run();
