@@ -29,7 +29,7 @@ namespace MilkShop.Pages.ProductBrandPages
 
         private async Task<Paginate<ProductBrand>> GetProductBrands()
         {
-            var result = await _productBrandBusiness.GetAll(PageIndex, Size);
+            var result = await _productBrandBusiness.GetPagingList(PageIndex, Size);
             if (result.Status > 0 && result.Data != null)
             {
                 var productBrands = result.Data;

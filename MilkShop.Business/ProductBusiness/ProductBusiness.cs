@@ -1,4 +1,5 @@
-﻿using MilkShop.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MilkShop.Data;
 using MilkShop.Data.Models;
 using MilkShopBusiness.Base;
 using System;
@@ -59,7 +60,8 @@ namespace MilkShopBusiness.ProductBusiness
                 var products = await _unitOfWork.ProductRepository.GetPagingListAsync(
                     selector: x => x,
                     page: page,
-                    size: size
+                    size: size,
+                    include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
                     );
                 if (products == null)
                 {
@@ -76,9 +78,28 @@ namespace MilkShopBusiness.ProductBusiness
             }
         }
 
-        public Task<IBusinessResult> GetById(int id)
+        public async Task<IBusinessResult> GetById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var product = await _unitOfWork.ProductRepository.SingleOrDefaultAsync(
+                    selector: x => x,
+                    predicate: x => x.ProductId == id,
+                    include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
+                    );
+                if (product != null)
+                {
+                    return new BusinessResult(1, "Get product successfully", product);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get product fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
         }
 
         public async Task<IBusinessResult> Save(Product product)

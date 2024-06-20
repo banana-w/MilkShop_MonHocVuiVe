@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductBrandBusiness;
+using MilkShopBusiness.ProductBusiness;
 
 namespace MilkShop.Pages.ProductPages
 {
     public class EditModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductBusiness _productBusiness;
+        private readonly IProductBrandBusiness _productBrand;
 
-        public EditModel(MilkShop.Data.Models.MilkShopContext context)
+        public EditModel(IProductBusiness productBusiness, IProductBrandBusiness productBrandBusiness)
         {
-            _context = context;
+            _productBusiness = productBusiness;
+            _productBrand = productBrandBusiness;
         }
 
         [BindProperty]
@@ -29,14 +33,15 @@ namespace MilkShop.Pages.ProductPages
                 return NotFound();
             }
 
-            var product =  await _context.Products.FirstOrDefaultAsync(m => m.ProductId == id);
+            var product =  await _productBusiness.GetById((int)id);
             if (product == null)
             {
                 return NotFound();
             }
-            Product = product;
-           ViewData["ProductBrandId"] = new SelectList(_context.ProductBrands, "ProductBrandId", "ProductBrandId");
-           ViewData["ProductCategoryId"] = new SelectList(_context.ProductCategories, "ProductCategoryId", "ProductCategoryId");
+            Product = (Product)product.Data;
+            var productBrand = await _productBrand.GetAll();
+            ViewData["ProductBrandId"] = new SelectList((System.Collections.IEnumerable)productBrand.Data, "ProductBrandId", "ProductBrandName");
+            //ViewData["ProductCategoryId"] = new SelectList(_context.ProductCategories, "ProductCategoryId", "ProductCategoryId");
             return Page();
         }
 
@@ -44,20 +49,13 @@ namespace MilkShop.Pages.ProductPages
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(Product).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _productBusiness.UpdateAsync(Product);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(Product.ProductId))
+                if (_productBusiness.GetById(Product.ProductId) == null)
                 {
                     return NotFound();
                 }
@@ -68,11 +66,6 @@ namespace MilkShop.Pages.ProductPages
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.ProductId == id);
         }
     }
 }

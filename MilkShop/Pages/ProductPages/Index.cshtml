@@ -68,10 +68,10 @@
                 @Html.DisplayFor(modelItem => item.StockQuantity)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductBrand.ProductBrandId)
+                @Html.DisplayFor(modelItem => item.ProductBrand.ProductBrandName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductCategory.ProductCategoryId)
+                @Html.DisplayFor(modelItem => item.ProductCategory.ProductCategoryName)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ProductId">Edit</a> |

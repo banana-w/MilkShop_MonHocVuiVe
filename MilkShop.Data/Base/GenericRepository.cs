@@ -145,5 +145,17 @@ namespace MilkShop.Data.Base
             if (orderBy != null) return orderBy(query).Select(selector).ToPaginateAsync(page, size, 1);
             return query.AsNoTracking().Select(selector).ToPaginateAsync(page, size, 1);
         }
+        public virtual async Task<TResult> SingleOrDefaultAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            IQueryable<T> query = _dbSet;
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null) return await orderBy(query).AsNoTracking().Select(selector).FirstOrDefaultAsync();
+
+            return await query.AsNoTracking().Select(selector).FirstOrDefaultAsync();
+        }
     }
 }

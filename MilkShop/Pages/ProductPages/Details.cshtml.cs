@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductBusiness;
 
 namespace MilkShop.Pages.ProductPages
 {
     public class DetailsModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductBusiness _productBusiness;
 
-        public DetailsModel(MilkShop.Data.Models.MilkShopContext context)
+        public DetailsModel(IProductBusiness productBusiness)
         {
-            _context = context;
+            _productBusiness = productBusiness;
         }
 
         public Product Product { get; set; } = default!;
@@ -27,14 +28,14 @@ namespace MilkShop.Pages.ProductPages
                 return NotFound();
             }
 
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == id);
+            var product = await _productBusiness.GetById((int)id);
             if (product == null)
             {
                 return NotFound();
             }
             else
             {
-                Product = product;
+                Product = (Product)product.Data;
             }
             return Page();
         }
