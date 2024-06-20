@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilkShop", "MilkShop\MilkShop.csproj", "{FD37ED63-30A7-4514-8B7D-219D979228E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilkShop", "MilkShop\MilkShop.csproj", "{FD37ED63-30A7-4514-8B7D-219D979228E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilkShop.Data", "MilkShop.Data\MilkShop.Data.csproj", "{E2E2D138-0983-4B2A-ADF6-9DB130ED494B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilkShop.Data", "MilkShop.Data\MilkShop.Data.csproj", "{E2E2D138-0983-4B2A-ADF6-9DB130ED494B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilkShop.Business", "MilkShop.Business\MilkShop.Business.csproj", "{1293D186-7B76-4C1F-8B52-3AF496319677}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilkShop.Business", "MilkShop.Business\MilkShop.Business.csproj", "{1293D186-7B76-4C1F-8B52-3AF496319677}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilkShop.Common", "MilkShop.Common\MilkShop.Common.csproj", "{28F80386-2B4A-46A9-9CDB-8899994F90D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilkShop.Common", "MilkShop.Common\MilkShop.Common.csproj", "{28F80386-2B4A-46A9-9CDB-8899994F90D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MilkShop.ConsoleApp", "MilkShop.ConsoleApp\MilkShop.ConsoleApp.csproj", "{E09DEA13-32A6-4578-9CBF-22A4768C573C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MilkShop.ConsoleApp", "MilkShop.ConsoleApp\MilkShop.ConsoleApp.csproj", "{E09DEA13-32A6-4578-9CBF-22A4768C573C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
