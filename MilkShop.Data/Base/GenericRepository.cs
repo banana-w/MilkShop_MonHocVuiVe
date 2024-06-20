@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -132,6 +135,27 @@ namespace MilkShop.Data.Base
         public async Task<T> GetByIdAsync(Guid code)
         {
             return await _dbSet.FindAsync(code);
+        }
+        public Task<Paginate<TResult>> GetPagingListAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, int page = 1, int size = 10)
+        {
+            IQueryable<T> query = _dbSet;
+            if (include != null) query = include(query);
+            if (predicate != null) query = query.Where(predicate);
+            if (orderBy != null) return orderBy(query).Select(selector).ToPaginateAsync(page, size, 1);
+            return query.AsNoTracking().Select(selector).ToPaginateAsync(page, size, 1);
+        }
+        public virtual async Task<TResult> SingleOrDefaultAsync<TResult>(Expression<Func<T, TResult>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+        {
+            IQueryable<T> query = _dbSet;
+            if (include != null) query = include(query);
+
+            if (predicate != null) query = query.Where(predicate);
+
+            if (orderBy != null) return await orderBy(query).AsNoTracking().Select(selector).FirstOrDefaultAsync();
+
+            return await query.AsNoTracking().Select(selector).FirstOrDefaultAsync();
         }
     }
 }

@@ -5,23 +5,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MilkShop.Common;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductBrandBusiness;
+using MilkShopBusiness.ProductBusiness;
 
 namespace MilkShop.Pages.ProductPages
 {
     public class CreateModel : PageModel
     {
         private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductBusiness _productBusiness;
+        private readonly IProductBrandBusiness _productBrandBusiness;
 
-        public CreateModel(MilkShop.Data.Models.MilkShopContext context)
+        public CreateModel(MilkShop.Data.Models.MilkShopContext context, IProductBusiness productBusiness, IProductBrandBusiness productBrandBusiness)
         {
             _context = context;
+            _productBusiness = productBusiness;
+            _productBrandBusiness = productBrandBusiness;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-        ViewData["ProductBrandId"] = new SelectList(_context.ProductBrands, "ProductBrandId", "ProductBrandId");
-        ViewData["ProductCategoryId"] = new SelectList(_context.ProductCategories, "ProductCategoryId", "ProductCategoryId");
+            var productBrand = await _productBrandBusiness.GetAll();
+            ViewData["ProductBrandId"] = new SelectList((System.Collections.IEnumerable)productBrand.Data, "ProductBrandId", "ProductBrandName");
+            ViewData["ProductCategoryId"] = new SelectList(_context.ProductCategories, "ProductCategoryId", "ProductCategoryName");
             return Page();
         }
 
@@ -31,13 +39,12 @@ namespace MilkShop.Pages.ProductPages
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            Product.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
+            var result = await _productBusiness.Save(Product);
+            if (result.Status != Const.SUCCESS_CREATE_CODE)
             {
                 return Page();
             }
-
-            _context.Products.Add(Product);
-            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

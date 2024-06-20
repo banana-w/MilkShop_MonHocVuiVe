@@ -1,4 +1,5 @@
-﻿using MilkShop.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MilkShop.Data;
 using MilkShop.Data.Models;
 using MilkShopBusiness.Base;
 using System;
@@ -11,12 +12,12 @@ namespace MilkShopBusiness.ProductBusiness
 {
     public interface IProductBusiness
     {
-        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetAll(int page, int size);
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> UpdateAsync(Product product);
         Task<IBusinessResult> Save(Product product);
         Task<IBusinessResult> DeleteAsync(int id);
-
+        Task<IBusinessResult> Search(string searchTerm, int page, int size);
     }
 
     public class ProductBusiness : IProductBusiness
@@ -48,7 +49,7 @@ namespace MilkShopBusiness.ProductBusiness
             }
         }
 
-        public async Task<IBusinessResult> GetAll()
+        public async Task<IBusinessResult> GetAll(int page, int size)
         {
             try
             {
@@ -56,8 +57,12 @@ namespace MilkShopBusiness.ProductBusiness
                 #endregion
 
                 //var currencies = _DAO.GetAll();
-                var products = await _unitOfWork.ProductRepository.GetAllAsync();
-
+                var products = await _unitOfWork.ProductRepository.GetPagingListAsync(
+                    selector: x => x,
+                    page: page,
+                    size: size,
+                    include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
+                    );
                 if (products == null)
                 {
                     return new BusinessResult(4, "No currency data");
@@ -73,9 +78,28 @@ namespace MilkShopBusiness.ProductBusiness
             }
         }
 
-        public Task<IBusinessResult> GetById(int id)
+        public async Task<IBusinessResult> GetById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var product = await _unitOfWork.ProductRepository.SingleOrDefaultAsync(
+                    selector: x => x,
+                    predicate: x => x.ProductId == id,
+                    include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
+                    );
+                if (product != null)
+                {
+                    return new BusinessResult(1, "Get product successfully", product);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get product fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
         }
 
         public async Task<IBusinessResult> Save(Product product)
@@ -90,6 +114,32 @@ namespace MilkShopBusiness.ProductBusiness
                 else
                 {
                     return new BusinessResult(2, "fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
+        {
+            try
+            {
+                var productBrands = await _unitOfWork.ProductRepository.GetPagingListAsync(
+                    selector: x => x,
+                    predicate: x => x.ProductName.Contains(searchTerm),
+                    page: page,
+                    size: size
+                    );
+
+                if (productBrands != null)
+                {
+                    return new BusinessResult(1, "Create successfully", productBrands);
+                }
+                else
+                {
+                    return new BusinessResult(1, "Create fail");
                 }
             }
             catch (Exception ex)
