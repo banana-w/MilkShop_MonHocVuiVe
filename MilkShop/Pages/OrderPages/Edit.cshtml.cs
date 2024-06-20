@@ -13,10 +13,12 @@ namespace MilkShop.Pages.OrderPages
     public class EditModel : PageModel
     {
         private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly MilkShop.Business.OrderBusinesses.IOrderBusiness _orderBusiness;
 
-        public EditModel(MilkShop.Data.Models.MilkShopContext context)
+        public EditModel(MilkShop.Data.Models.MilkShopContext context, Business.OrderBusinesses.IOrderBusiness orderBusiness)
         {
             _context = context;
+            _orderBusiness = orderBusiness;
         }
 
         [BindProperty]
@@ -29,7 +31,8 @@ namespace MilkShop.Pages.OrderPages
                 return NotFound();
             }
 
-            var order =  await _context.Orders.FirstOrDefaultAsync(m => m.OrderId == id);
+            //var order =  await _context.Orders.FirstOrDefaultAsync(m => m.OrderId == id);
+            var order = (Order)(await _orderBusiness.GetById(id.Value)).Data;
             if (order == null)
             {
                 return NotFound();
@@ -48,11 +51,12 @@ namespace MilkShop.Pages.OrderPages
                 return Page();
             }
 
-            _context.Attach(Order).State = EntityState.Modified;
+            //_context.Attach(Order).State = EntityState.Modified;
+           
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _orderBusiness.UpdateAsync(Order);
             }
             catch (DbUpdateConcurrencyException)
             {

@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MilkShop.Data\MilkShop.Data.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="OrderDetailBusiness\" />
+    <ProjectReference Include="..\MilkShop.Data\MilkShop.Data.csproj" />
   </ItemGroup>
 
 </Project>

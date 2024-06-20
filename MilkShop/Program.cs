@@ -16,6 +16,15 @@ namespace MilkShop
             builder.Services.AddScoped<ICustomerBusiness, CustomerBusiness>();
             builder.Services.AddScoped<IProductCategoryBusiness, ProductCategoryBusiness>();
 
+            builder.Services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+                options.Cookie.HttpOnly = true; // Ensure the cookie is accessible only to the server.
+                options.Cookie.IsEssential = true; // Make the session cookie essential.
+            });
+            builder.Services.AddScoped<MilkShop.Business.OrderBusinesses.IOrderBusiness, MilkShop.Business.OrderBusinesses.OrderBusiness>();
+            builder.Services.AddScoped<MilkShop.Business.OrderDetailBusinesses.IOrderDetailBusiness, MilkShop.Business.OrderDetailBusinesses.OrderDetailBusiness>();
             builder.Services.AddDbContext<MilkShopContext>(options
                 => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
@@ -34,7 +43,7 @@ namespace MilkShop
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.MapRazorPages();
 
             app.Run();
