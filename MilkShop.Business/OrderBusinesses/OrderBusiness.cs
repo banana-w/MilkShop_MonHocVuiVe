@@ -1,4 +1,5 @@
-﻿using MilkShop.Business.OrderDetailBusinesses;
+﻿using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.OrderDetailBusinesses;
 using MilkShop.Data;
 using MilkShop.Data.Models;
 using MilkShopBusiness.Base;
@@ -12,11 +13,12 @@ namespace MilkShop.Business.OrderBusinesses
 {
     public interface IOrderBusiness
     {
-        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetAll(int page, int size);
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> UpdateAsync(Order order);
         Task<IBusinessResult> Save(Order order);
         Task<IBusinessResult> DeleteAsync(int id);
+        Task<IBusinessResult> Search(string searchTerm, int page, int size);
     }
 
     public class OrderBusiness : IOrderBusiness
@@ -51,11 +53,16 @@ namespace MilkShop.Business.OrderBusinesses
             }
         }
 
-        public async Task<IBusinessResult> GetAll()
+        public async Task<IBusinessResult> GetAll(int page, int size)
         {
             try
             {
-                var orders = await _unitOfWork.OrderRepository.GetListOrder();
+                var orders = await _unitOfWork.OrderRepository.GetPagingListAsync(
+                    selector: x => x,
+                    page: page,
+                    size: size,
+                    include: x => x.Include(p => p.OrderDetails)
+                    );
                 if (orders == null)
                 {
                     return new BusinessResult(4, "No order data");
@@ -77,7 +84,9 @@ namespace MilkShop.Business.OrderBusinesses
         {
             try
             {
-                var order = await _unitOfWork.OrderRepository.GetByIdAsync(id);
+                var order = await _unitOfWork.OrderRepository.SingleOrDefaultAsync(selector: x => x,
+                    predicate: x => x.OrderId == id,
+                    include: x => x.Include(p => p.OrderDetails));
                 if (order == null)
                 {
                     return new BusinessResult(4, "No order found");
@@ -120,6 +129,31 @@ namespace MilkShop.Business.OrderBusinesses
             }
         }
 
+        public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
+        {
+            try
+            {
+                var order = await _unitOfWork.OrderRepository.GetPagingListAsync(
+                    selector: x => x,
+                    predicate: x => x.OrderStatus.Contains(searchTerm),
+                    page: page,
+                    size: size
+                    );
+
+                if (order != null)
+                {
+                    return new BusinessResult(1, "Create successfully", order);
+                }
+                else
+                {
+                    return new BusinessResult(1, "Create fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
 
         public async Task<IBusinessResult> UpdateAsync(Order order)
         {
