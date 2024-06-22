@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
 
 namespace MilkShop.Pages.OrderPages
 {
@@ -20,21 +21,47 @@ namespace MilkShop.Pages.OrderPages
             _orderBusiness = orderBusiness;
         }
 
-        public IList<Order> Order { get;set; } = default!;
+        public Paginate<Order> Order { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+        [BindProperty(SupportsGet = true)]
+
+        public int PageIndex { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public int Size { get; set; } = 5;
+
+
+        private async Task<Paginate<Order>> GetOrder()
+        {
+            var result = await _orderBusiness.GetAll(PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var order = result.Data;
+                return (Paginate<Order>)order;
+            }
+            return null;
+        }
+
+        private async Task<Paginate<Order>> Search()
+        {
+            var result = await _orderBusiness.Search(SearchTerm, PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var order = result.Data;
+                return (Paginate<Order>)order;
+            }
+            return null;
+        }
 
         public async Task OnGetAsync()
         {
-            //Order = await _context.Orders
-            //    .Include(o => o.User).ToListAsync();
-            //Order = (IList<Order>)await _orderBusiness.GetAll();
-            var temp = await _orderBusiness.GetAll();
-            if(temp != null && temp.Data != null)
+           if(!string.IsNullOrEmpty(SearchTerm))
             {
-                Order = (IList<Order>)temp.Data;
+                Order = await Search();
             }
             else
             {
-                Order = new List<Order>();
+                Order = await GetOrder();
             }
         }
     }
