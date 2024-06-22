@@ -65,7 +65,7 @@
                 @Html.DisplayFor(modelItem => item.ProductPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProductImage)
+                <img src="@Url.Content(item.ProductImage)" alt="Product Image" style="width:100px; height:100px;" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
