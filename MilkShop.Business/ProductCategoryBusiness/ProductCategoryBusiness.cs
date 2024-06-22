@@ -12,6 +12,7 @@ namespace MilkShopBusiness.ProductCategoryBusiness
     public interface IProductCategoryBusiness
     {
         Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetCategories();
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> UpdateAsync(ProductCategory productCategory);
         Task<IBusinessResult> Save(ProductCategory productCategory);
@@ -59,6 +60,24 @@ namespace MilkShopBusiness.ProductCategoryBusiness
         }
 
         public async Task<IBusinessResult> GetAll()
+        {
+            try
+            {
+                var productCategories = await _unitOfWork.ProductCategoryRepository.GetAllAsync();
+                if (productCategories != null)
+                {
+                    return new BusinessResult(1, "Get all product categories successfully", productCategories);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get all product categories fail");
+                }
+            }catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+        public async Task<IBusinessResult> GetCategories()
         {
             try
             {
