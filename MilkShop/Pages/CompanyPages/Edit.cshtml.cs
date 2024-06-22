@@ -6,35 +6,37 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CompanyBusiness;
+using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
 
 namespace MilkShop.Pages.CompanyPages
 {
     public class EditModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly ICompanyBusiness _companyBusiness;
 
-        public EditModel(MilkShop.Data.Models.MilkShopContext context)
+        public EditModel(ICompanyBusiness companyBusiness)
         {
-            _context = context;
+            _companyBusiness = companyBusiness;
         }
 
         [BindProperty]
         public Company Company { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company =  await _context.Companies.FirstOrDefaultAsync(m => m.CompanyId == id);
+            var company = await _companyBusiness.GetById(id);
             if (company == null)
             {
                 return NotFound();
             }
-            Company = company;
+            Company = company.Data as Company;
             return Page();
         }
 
@@ -46,16 +48,23 @@ namespace MilkShop.Pages.CompanyPages
             {
                 return Page();
             }
-
-            _context.Attach(Company).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _companyBusiness.UpdateAsync(Company);
+                if (result.Status > 0)
+                {
+                    ViewData["SuccessMessage"] = result.Message;
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    ViewData["ErrorMessage"] = result.Message;
+                    return Page();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CompanyExists(Company.CompanyId))
+                if (!await CompanyExits(Company.CompanyId))
                 {
                     return NotFound();
                 }
@@ -64,13 +73,12 @@ namespace MilkShop.Pages.CompanyPages
                     throw;
                 }
             }
-
-            return RedirectToPage("./Index");
         }
 
-        private bool CompanyExists(int id)
+        private async Task<bool> CompanyExits(int id)
         {
-            return _context.Companies.Any(e => e.CompanyId == id);
+            var customer = await _companyBusiness.GetById(id);
+            return customer != null && customer.Data != null;
         }
     }
 }

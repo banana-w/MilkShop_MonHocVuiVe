@@ -6,6 +6,7 @@ using MilkShopBusiness.ProductBrandBusiness;
 using MilkShopBusiness.ProductBusiness;
 using MilkShop.Business.LoginBusiness;
 using MilkShop.Data.Repository;
+using MilkShop.Business.CompanyBusiness;
 
 namespace MilkShop
 {
@@ -35,6 +36,7 @@ namespace MilkShop
             builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
             builder.Services.AddScoped<ILoginRepository, LoginRepository>();
             builder.Services.AddScoped<ILoginBusiness, LoginBusiness>();
+            builder.Services.AddScoped<ICompanyBusiness, CompanyBusiness>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

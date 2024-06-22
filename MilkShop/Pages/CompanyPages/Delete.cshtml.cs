@@ -5,58 +5,62 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MilkShop.Business.CompanyBusiness;
 using MilkShop.Data.Models;
 
 namespace MilkShop.Pages.CompanyPages
 {
     public class DeleteModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly ICompanyBusiness _companyBusiness;
 
-        public DeleteModel(MilkShop.Data.Models.MilkShopContext context)
+        public DeleteModel(ICompanyBusiness companyBusiness)
         {
-            _context = context;
+            _companyBusiness = companyBusiness;
         }
 
         [BindProperty]
         public Company Company { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await _context.Companies.FirstOrDefaultAsync(m => m.CompanyId == id);
+            var company = await _companyBusiness.GetById(id);
 
-            if (company == null)
+            if (company.Status > 0)
             {
-                return NotFound();
+                Company = company.Data as Company;
             }
             else
             {
-                Company = company;
+                TempData["ErrorMessage"] = company.Message;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await _context.Companies.FindAsync(id);
-            if (company != null)
+            var deleteResult = await _companyBusiness.DeleteAsync(id);
+            if (deleteResult.Status > 0)
             {
-                Company = company;
-                _context.Companies.Remove(Company);
-                await _context.SaveChangesAsync();
+                ViewData["SuccessMessage"] = deleteResult.Message;
+                return RedirectToPage("./Index");
             }
+            else
+            {
+                ViewData["ErrorMessage"] = $"Error: {deleteResult.Message}";
+                return Page();
 
-            return RedirectToPage("./Index");
+            }
         }
     }
 }

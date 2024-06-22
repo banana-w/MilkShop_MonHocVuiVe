@@ -5,17 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MilkShop.Business.CompanyBusiness;
+using MilkShop.Common;
 using MilkShop.Data.Models;
 
 namespace MilkShop.Pages.CompanyPages
 {
     public class CreateModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly ICompanyBusiness _companyBusiness;
 
-        public CreateModel(MilkShop.Data.Models.MilkShopContext context)
+        public CreateModel(ICompanyBusiness companyBusiness)
         {
-            _context = context;
+            _companyBusiness = companyBusiness;
         }
 
         public IActionResult OnGet()
@@ -29,13 +31,11 @@ namespace MilkShop.Pages.CompanyPages
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var result = await _companyBusiness.Save(Company);
+            if (result.Status != Const.SUCCESS_CREATE_CODE)
             {
                 return Page();
             }
-
-            _context.Companies.Add(Company);
-            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

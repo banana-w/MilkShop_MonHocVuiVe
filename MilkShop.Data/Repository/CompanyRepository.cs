@@ -12,9 +12,5 @@ namespace MilkShop.Data.Repository
     public class CompanyRepository: GenericRepository<Company>
     {
         public CompanyRepository() { }
-        public async Task<List<Company>> GetListCompany()
-        {
-            return await _context.Companies.Include(x => x.CompanyId).ToListAsync();
-        }
     }
 }

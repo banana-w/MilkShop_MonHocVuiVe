@@ -10,41 +10,49 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+<form method="get">
+    <div class="input-group">
+        <input class="form-control" asp-for="SearchTerm">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].CompanyName)
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].CompanyAddress)
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyAddress)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].CompanyPhone)
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyPhone)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].CompanyEmail)
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyEmail)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].Status)
+                @Html.DisplayNameFor(model => model.Company.Items[0].Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].CreateDated)
+                @Html.DisplayNameFor(model => model.Company.Items[0].CreateDated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].ProductId)
+                @Html.DisplayNameFor(model => model.Company.Items[0].ProductId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].CompanyFirstName)
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyFirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company[0].CompanyLastName)
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyLastName)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Company) {
+@foreach (var item in Model.Company.Items) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.CompanyName)
@@ -82,3 +90,19 @@
 }
     </tbody>
 </table>
+<div>
+    <a asp-page="/CompanyPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex - 1)"
+       class="@(Model.PageIndex == 1 ? "disabled" : "") btn btn-primary">Previous</a>
+
+    <span>Page @Model.Company.Page of @Model.Company.TotalPages </span>
+
+    <a asp-page="/CompanyPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex + 1)"
+       class="@(Model.PageIndex == Model.Company.TotalPages ? "disabled" : "") btn btn-primary">Next</a>
+</div>
+
+<style>
+    .disabled {
+        pointer-events: none;
+        color: grey;
+    }
+</style>
