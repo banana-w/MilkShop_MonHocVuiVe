@@ -1,0 +1,108 @@
+﻿@page
+@model MilkShop.Pages.CompanyPages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<form method="get">
+    <div class="input-group">
+        <input class="form-control" asp-for="SearchTerm">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyPhone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].CreateDated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyFirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.Items[0].CompanyLastName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Company.Items) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyPhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyFirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyLastName)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.CompanyId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.CompanyId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.CompanyId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div>
+    <a asp-page="/CompanyPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex - 1)"
+       class="@(Model.PageIndex == 1 ? "disabled" : "") btn btn-primary">Previous</a>
+
+    <span>Page @Model.Company.Page of @Model.Company.TotalPages </span>
+
+    <a asp-page="/CompanyPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex + 1)"
+       class="@(Model.PageIndex == Model.Company.TotalPages ? "disabled" : "") btn btn-primary">Next</a>
+</div>
+
+<style>
+    .disabled {
+        pointer-events: none;
+        color: grey;
+    }
+</style>
