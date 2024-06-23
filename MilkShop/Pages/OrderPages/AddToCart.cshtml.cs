@@ -34,7 +34,7 @@ namespace MilkShop.Pages.OrderPages
                 ProductPrice = product.ProductPrice,
                 Quantity = 1 // Default quantity to add to cart
             });
-
+            TempData["SuccessMessage"] = $"{product.ProductName} is added to cart";            
             HttpContext.Session.SetObjectAsJson("Cart", cart);
 
             return RedirectToPage("/ProductPages/Index");

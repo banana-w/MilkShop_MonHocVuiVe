@@ -56,11 +56,21 @@ namespace MilkShop.Pages.ProductPages
         {
             try
             {
-                await _productBusiness.UpdateAsync(Product);
+                var result = await _productBusiness.UpdateAsync(Product);
+                if (result.Status > 0)
+                {
+                    TempData["SuccessMessage"] = result.Message;
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = result.Message;
+                    return Page();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_productBusiness.GetById(Product.ProductId) == null)
+                if (_productBusiness.FindId(Product.ProductId) == null)
                 {
                     return NotFound();
                 }

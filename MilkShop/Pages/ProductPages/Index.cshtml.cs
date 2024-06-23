@@ -58,6 +58,7 @@ namespace MilkShop.Pages.ProductPages
             {
                 Product = await GetProduct();
             }
+            ViewData["SuccessMessage"] = TempData["SuccessMessage"];
         }
     }
 }

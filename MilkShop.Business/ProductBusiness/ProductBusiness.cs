@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
+using MilkShop.Common;
 using MilkShop.Data;
 using MilkShop.Data.Models;
 using MilkShopBusiness.Base;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +17,9 @@ namespace MilkShopBusiness.ProductBusiness
     public interface IProductBusiness
     {
         Task<IBusinessResult> GetAll(int page, int size);
+        Task<IBusinessResult> GetAllProduct();
         Task<IBusinessResult> GetById(int id);
+        Task<IBusinessResult> FindId(int id);
         Task<IBusinessResult> UpdateAsync(Product product);
         Task<IBusinessResult> Save(Product product);
         Task<IBusinessResult> DeleteAsync(int id);
@@ -78,6 +84,30 @@ namespace MilkShopBusiness.ProductBusiness
             }
         }
 
+        public async Task<IBusinessResult> GetAllProduct()
+        {
+            try
+            {
+                #region Business rule
+                #endregion
+
+                //var currencies = _DAO.GetAll();
+                var products = await _unitOfWork.ProductRepository.GetAllAsync();
+                if (products == null)
+                {
+                    return new BusinessResult(4, "No currency data");
+                }
+                else
+                {
+                    return new BusinessResult(1, "Get currency list success", products);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
         public async Task<IBusinessResult> GetById(int id)
         {
             try
@@ -87,6 +117,25 @@ namespace MilkShopBusiness.ProductBusiness
                     predicate: x => x.ProductId == id,
                     include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
                     );
+                if (product != null)
+                {
+                    return new BusinessResult(1, "Get product successfully", product);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get product fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+        public async Task<IBusinessResult> FindId(int id)
+        {
+            try
+            {
+                var product = await _unitOfWork.ProductRepository.GetByIdAsync(id);
                 if (product != null)
                 {
                     return new BusinessResult(1, "Get product successfully", product);
@@ -155,7 +204,7 @@ namespace MilkShopBusiness.ProductBusiness
                 int result = await _unitOfWork.ProductRepository.UpdateAsync(product);
                 if (result > 0)
                 {
-                    return new BusinessResult(1, "success");
+                    return new BusinessResult(1, Const.SUCCESS_UPDATE_MSG);
                 }
                 else
                 {
