@@ -4,7 +4,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 mc:Ignorable="d"
-Title="wMentor" Height="569" Width="1338">
+Title="wProduct" Height="569" Width="1338">
 
     <Grid HorizontalAlignment="Left" Width="1423" Margin="12,0,0,-6">
         <StackPanel Orientation="Vertical" Margin="0,0,116,-33" RenderTransformOrigin="0.5,0.5">
