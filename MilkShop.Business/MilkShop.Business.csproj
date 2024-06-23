@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MilkShop.Common\MilkShop.Common.csproj" />
     <ProjectReference Include="..\MilkShop.Data\MilkShop.Data.csproj" />
   </ItemGroup>
 

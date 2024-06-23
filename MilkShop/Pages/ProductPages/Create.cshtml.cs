@@ -46,8 +46,10 @@ namespace MilkShop.Pages.ProductPages
             var result = await _productBusiness.Save(Product);
             if (result.Status != Const.SUCCESS_CREATE_CODE)
             {
+                TempData["ErrorMessage"] = result.Message;
                 return Page();
             }
+            TempData["SuccessMessage"] = result.Message;
 
             return RedirectToPage("./Index");
         }
