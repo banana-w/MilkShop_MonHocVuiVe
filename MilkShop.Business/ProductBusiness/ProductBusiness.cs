@@ -179,7 +179,8 @@ namespace MilkShopBusiness.ProductBusiness
                     selector: x => x,
                     predicate: x => x.ProductName.Contains(searchTerm),
                     page: page,
-                    size: size
+                    size: size,
+                    include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
                     );
 
                 if (productBrands != null)
