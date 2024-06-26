@@ -1,4 +1,5 @@
-﻿using MilkShop.WPFApp.UI;
+﻿using MilkShop.WPF.UI;
+using MilkShop.WPFApp.UI;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,13 @@ namespace MilkShop.WPF
         private void Open_wProduct_Click(object sender, RoutedEventArgs e)
         {
             var p = new wProduct();
+            p.Owner = this;
+            p.Show();
+        }
+
+        private void Open_wCompany_Click(object sender, RoutedEventArgs e)
+        {
+            var p = new wCompany();
             p.Owner = this;
             p.Show();
         }
