@@ -14,7 +14,9 @@ namespace MilkShop.Business.CompanyBusiness
     public interface ICompanyBusiness
     {
         Task<IBusinessResult> GetAll(int page, int size);
+        Task<IBusinessResult> GetAllCompany();
         Task<IBusinessResult> GetById(int id);
+        Task<IBusinessResult> FindId(int id);
         Task<IBusinessResult> UpdateAsync(Company company);
         Task<IBusinessResult> Save(Company company);
         Task<IBusinessResult> DeleteAsync(int id);
@@ -50,6 +52,26 @@ namespace MilkShop.Business.CompanyBusiness
             }
         }
 
+        public async Task<IBusinessResult> FindId(int id)
+        {
+            try
+            {
+                var company = await _unitOfWork.CompanyRepository.GetByIdAsync(id);
+                if (company != null)
+                {
+                    return new BusinessResult(1, "Get company successfully", company);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get company fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
         public async Task<IBusinessResult> GetAll(int page, int size)
         {
             try
@@ -70,6 +92,30 @@ namespace MilkShop.Business.CompanyBusiness
                 else
                 {
                     return new BusinessResult(1, "Get currency list success", products);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> GetAllCompany()
+        {
+            try
+            {
+                #region Business rule
+                #endregion
+
+                //var currencies = _DAO.GetAll();
+                var companies = await _unitOfWork.CompanyRepository.GetAllAsync();
+                if (companies == null)
+                {
+                    return new BusinessResult(4, "No currency data");
+                }
+                else
+                {
+                    return new BusinessResult(1, "Get currency list success", companies);
                 }
             }
             catch (Exception ex)
