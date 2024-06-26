@@ -35,5 +35,11 @@ namespace MilkShop.WPF
             p.Owner = this;
             p.Show();
         }
+        private void Open_wOrder_Click(object sender, RoutedEventArgs e)
+        {
+            var p = new wOrder();
+            p.Owner = this;
+            p.Show();
+        }
     }
 }
