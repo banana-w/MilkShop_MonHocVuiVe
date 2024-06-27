@@ -6,6 +6,7 @@
 }
 
 <h1>Customers</h1>
+
 @if (ViewData["SuccessMessage"] != null)
 {
     <div class="alert alert-success" role="alert">
@@ -19,79 +20,82 @@
         @ViewData["ErrorMessage"]
     </div>
 }
+
+<form method="get">
+    <div class="input-group">
+        <input class="form-control" asp-for="SearchTerm">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
+
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].UserEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].DateOfBirth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customers[0].PreferredLanguage)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].UserName)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].UserEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].Status)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].CreatedDate)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].PhoneNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].Address)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].DateOfBirth)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].Password)</th>
+            <th>@Html.DisplayNameFor(model => model.Customer.Items[0].PreferredLanguage)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Customers)
+        @foreach (var item in Model.Customer.Items)
         {
-            <tr>
+            <tr data-href="@Url.Page("./Details", new { id = item.UserId })" style="cursor: pointer;">
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.UserEmail)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateOfBirth)</td>
+                <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                <td>@Html.DisplayFor(modelItem => item.PreferredLanguage)</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserEmail)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateOfBirth)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Password)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PreferredLanguage)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.UserId">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.UserId">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.UserId">Delete</a>
+                    <a asp-page="./Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-page="./Delete" asp-route-id="@item.UserId" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<div>
+    <a asp-page="/CustomerPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex - 1)"
+       class="@(Model.PageIndex == 1 ? "disabled" : "") btn btn-primary">Previous</a>
+
+    <span>Page @Model.Customer.Page of @Model.Customer.TotalPages </span>
+
+    <a asp-page="/CustomerPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex + 1)"
+       class="@(Model.PageIndex == Model.Customer.TotalPages ? "disabled" : "") btn btn-primary">Next</a>
+</div>
+
+<style>
+    .disabled {
+        pointer-events: none;
+        color: grey;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var rows = document.querySelectorAll("tr[data-href]");
+            rows.forEach(function (row) {
+                row.addEventListener("click", function () {
+                    window.location = row.getAttribute("data-href");
+                });
+            });
+        });
+    </script>
+}

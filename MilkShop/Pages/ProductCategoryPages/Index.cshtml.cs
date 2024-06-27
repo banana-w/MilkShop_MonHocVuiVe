@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
 using MilkShopBusiness.ProductCategoryBusiness;
 
 namespace MilkShop.Pages.ProductCategoryPages
@@ -18,18 +19,31 @@ namespace MilkShop.Pages.ProductCategoryPages
         {
             _productCategoryBusiness = productCategoryBusiness;
         }
+        public Paginate<ProductCategory> ProductCategory { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public int Size { get; set; } = 5;
 
-        [BindProperty]
-        public ProductCategory ProductCategory { get; set; } = default!;
-
-        public List<ProductCategory> ProductCategories { get;set; } = default!;
-
-        private List<ProductCategory> GetProductCategories()
+        private async Task<Paginate<ProductCategory>> GetProductCategories()
         {
-            var result = _productCategoryBusiness.GetAll();
-            if (result.Status > 0 && result.Result.Data != null)
+            var result = await _productCategoryBusiness.GetAll(Size, PageIndex);
+            if (result.Status > 0 && result.Data != null)
             {
-                var productCate = (List<ProductCategory>)result.Result.Data;
+                var productCate = (Paginate<ProductCategory>)result.Data;                
+                return productCate;
+            }
+            return null;
+        }
+
+        private async Task<Paginate<ProductCategory>> SearchProductCategories()
+        {
+            var result = await _productCategoryBusiness.Search(SearchTerm, Size, PageIndex);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var productCate = (Paginate<ProductCategory>)result.Data;
                 return productCate;
             }
             return null;
@@ -37,7 +51,14 @@ namespace MilkShop.Pages.ProductCategoryPages
 
         public async Task OnGetAsync()
         {
-            ProductCategories = GetProductCategories();
+            if (!string.IsNullOrEmpty(SearchTerm))
+            {
+                ProductCategory = await SearchProductCategories();
+            }
+            else
+            {
+                ProductCategory = await GetProductCategories();
+            }
         }
     }
 }

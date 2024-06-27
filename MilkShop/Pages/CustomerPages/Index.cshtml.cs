@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Business.CustomerBusiness;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
 
 namespace MilkShop.Pages.CustomerPages
 {
@@ -18,27 +19,46 @@ namespace MilkShop.Pages.CustomerPages
         {
             _customerBusiness = customerBusiness;
         }
-
         public string Message { get; set; } = default!;
+        public Paginate<Customer> Customer { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        [BindProperty(SupportsGet = true)]
+        public int Size { get; set; } = 5;
 
-        [BindProperty]
-        public Customer Customer { get; set; } = default!;
-
-        public List<Customer> Customers { get; set; } = default!;
-
-        private List<Customer> GetCustomers()
+        private async Task<Paginate<Customer>> GetCustomers()
         {
-            var result = _customerBusiness.GetAll();
-            if(result.Status > 0 && result.Result.Data != null)
+            var result = await _customerBusiness.GetAll(PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
             {
-                var customer = (List<Customer>)result.Result.Data;
-                return customer;
+                var customer = result.Data;
+                return (Paginate<Customer>)customer;
             }
             return null;
         }
-        public void OnGet()
+
+        private async Task<Paginate<Customer>> Search()
         {
-            Customers = GetCustomers();
+            var result = await _customerBusiness.Search(SearchTerm, PageIndex, Size);
+            if (result.Status > 0 && result.Data != null)
+            {
+                var customer = result.Data;
+                return (Paginate<Customer>)customer;
+            }
+            return null;
+        }
+        public async Task OnGetAsync()
+        {
+            if (!string.IsNullOrEmpty(SearchTerm))
+            {
+                Customer = await Search();
+            }
+            else
+            {
+                Customer = await GetCustomers();
+            }
         }
     }
 }
