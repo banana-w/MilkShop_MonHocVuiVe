@@ -31,6 +31,7 @@ namespace MilkShop.Pages.OrderPages
             {
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
+                ProductImage = product.ProductImage,
                 ProductPrice = product.ProductPrice,
                 Quantity = 1 // Default quantity to add to cart
             });
