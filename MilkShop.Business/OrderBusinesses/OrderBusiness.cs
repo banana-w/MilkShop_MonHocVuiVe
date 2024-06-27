@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using MilkShop.Business.OrderDetailBusinesses;
 using MilkShop.Data;
 using MilkShop.Data.Models;
 using MilkShopBusiness.Base;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +16,9 @@ namespace MilkShop.Business.OrderBusinesses
     public interface IOrderBusiness
     {
         Task<IBusinessResult> GetAll(int page, int size);
+        Task<IBusinessResult> GetAll();
         Task<IBusinessResult> GetById(int id);
+        Task<IBusinessResult> FindById(int id);
         Task<IBusinessResult> UpdateAsync(Order order);
         Task<IBusinessResult> Save(Order order);
         Task<IBusinessResult> DeleteAsync(int id);
@@ -31,6 +35,8 @@ namespace MilkShop.Business.OrderBusinesses
             _unitOfWork ??= new UnitOfWork();
             _orderDetailBusiness ??= new OrderDetailBusiness();
         }
+
+
 
         public async Task<IBusinessResult> DeleteAsync(int id)
         {
@@ -50,6 +56,19 @@ namespace MilkShop.Business.OrderBusinesses
             catch (Exception ex)
             {
                 return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> FindById(int id)
+        {
+           var order = await _unitOfWork.OrderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return new BusinessResult(4, "No order found");
+            }
+            else
+            {
+                return new BusinessResult(1, "Get order success", order);
             }
         }
 
@@ -80,6 +99,28 @@ namespace MilkShop.Business.OrderBusinesses
             }
         }
 
+        public async Task<IBusinessResult> GetAll()
+        {
+            try
+            {
+                var orders = await _unitOfWork.OrderRepository.GetAllAsync();
+                if (orders == null)
+                {
+                    return new BusinessResult(4, "No order data");
+                }
+                else
+                {
+                    //orders = orders.Include(o => o.User).ToList();
+
+                    return new BusinessResult(1, "Get order list success", orders);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
         public async Task<IBusinessResult> GetById(int id)
         {
             try
@@ -101,6 +142,8 @@ namespace MilkShop.Business.OrderBusinesses
                 return new BusinessResult(-4, ex.Message);
             }
         }
+
+
 
         public async Task<IBusinessResult> Save(Order order)
         {
