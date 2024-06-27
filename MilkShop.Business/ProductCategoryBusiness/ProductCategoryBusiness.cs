@@ -11,11 +11,12 @@ namespace MilkShopBusiness.ProductCategoryBusiness
 {
     public interface IProductCategoryBusiness
     {
-        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetAll(int size, int page);
         Task<IBusinessResult> GetById(int id);
         Task<IBusinessResult> UpdateAsync(ProductCategory productCategory);
         Task<IBusinessResult> Save(ProductCategory productCategory);
         Task<IBusinessResult> DeleteAsync(int id);
+        Task<IBusinessResult> Search(string searchKey, int size, int page);
 
     }
     public class ProductCategoryBusiness : IProductCategoryBusiness
@@ -58,11 +59,16 @@ namespace MilkShopBusiness.ProductCategoryBusiness
             }
         }
 
-        public async Task<IBusinessResult> GetAll()
+        public async Task<IBusinessResult> GetAll(int size, int page)
         {
             try
             {
-                var productCategories = await _unitOfWork.ProductCategoryRepository.GetAllAsync();
+                //var productCategories = await _unitOfWork.ProductCategoryRepository.GetAllAsync();\
+                var productCategories = await _unitOfWork.ProductCategoryRepository.GetPagingListAsync(
+                    selector: x => x,
+                    size: size,
+                    page: page
+                    );
                 if (productCategories != null)
                 {
                     return new BusinessResult(1, "Get all product categories successfully", productCategories);
@@ -72,6 +78,31 @@ namespace MilkShopBusiness.ProductCategoryBusiness
                     return new BusinessResult(-1, "Get all product categories fail");
                 }
             }catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> Search(string keyword, int size, int page)
+        {
+            try
+            {
+                var productCategories = await _unitOfWork.ProductCategoryRepository.GetPagingListAsync(
+                    selector: x => x,
+                    predicate: x => x.ProductCategoryName == keyword,
+                    size: size,
+                    page: page
+                    );
+                if (productCategories != null)
+                {
+                    return new BusinessResult(1, "Search product categories successfully", productCategories);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Search product categories fail");
+                }
+            }
+            catch (Exception ex)
             {
                 return new BusinessResult(-4, ex.Message);
             }
