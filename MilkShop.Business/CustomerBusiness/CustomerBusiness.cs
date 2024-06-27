@@ -12,11 +12,13 @@ namespace MilkShop.Business.CustomerBusiness
 {
     public interface ICustomerBusiness
     {
-        Task<IBusinessResult> GetAll();
+        Task<IBusinessResult> GetAll(int page, int size);
         Task<IBusinessResult> GetByIdAsync(int id);
         Task<IBusinessResult> UpdateAsync(Customer customer);
         Task<IBusinessResult> Save(Customer customer);
         Task<IBusinessResult> DeleteAsync(int id);
+        Task<IBusinessResult> Search(string searchTerm, int page, int size);
+
     }
 
     public class CustomerBusiness : ICustomerBusiness
@@ -53,11 +55,16 @@ namespace MilkShop.Business.CustomerBusiness
             }
         }
 
-        public async Task<IBusinessResult> GetAll()
+        public async Task<IBusinessResult> GetAll(int page, int size)
         {
             try
             {
-                var customer = await _unitOfWork.CustomerRepository.GetAllAsync();
+                //var customer = await _unitOfWork.CustomerRepository.GetAllAsync();
+                var customer = await _unitOfWork.CustomerRepository.GetPagingListAsync(
+                   selector: x => x,
+                   page: page,
+                   size: size
+                   );
                 if (customer != null)
                 {
                     return new BusinessResult(1, "Get all customer successfully", customer);
@@ -65,6 +72,32 @@ namespace MilkShop.Business.CustomerBusiness
                 else
                 {
                     return new BusinessResult(-1, "Get all customer fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
+        {
+            try
+            {
+                var customer = await _unitOfWork.CustomerRepository.GetPagingListAsync(
+                    selector: x => x,
+                    predicate: x => x.UserName.Contains(searchTerm),
+                    page: page,
+                    size: size
+                    );
+
+                if (customer != null)
+                {
+                    return new BusinessResult(1, "Search successfully", customer);
+                }
+                else
+                {
+                    return new BusinessResult(1, "Search fail");
                 }
             }
             catch (Exception ex)
