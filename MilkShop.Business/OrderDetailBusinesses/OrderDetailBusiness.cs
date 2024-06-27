@@ -11,6 +11,7 @@ namespace MilkShop.Business.OrderDetailBusinesses
         Task<IBusinessResult> Add(OrderDetail orderDetail);
         Task<IBusinessResult> Update(OrderDetail orderDetail);
         Task<IBusinessResult> Delete(int id);
+        Task<IBusinessResult> DeleteByOrderId(int orderId);
         Task<IBusinessResult> GetAll();
         Task<IBusinessResult> GetById(int id);
     }
@@ -64,6 +65,33 @@ namespace MilkShop.Business.OrderDetailBusinesses
                 return new BusinessResult(-4, ex.Message);
             }
         }
+
+        public async Task<IBusinessResult> DeleteByOrderId(int orderId)
+        {
+            try
+            {
+                var orderDetails = await _unitOfWork.OrderDetailRepository.GetByOrderId(orderId);
+                if (orderDetails != null)
+                {
+                    foreach (var orderDetail in orderDetails)
+                    {
+                        await _unitOfWork.OrderDetailRepository.RemoveAsync(orderDetail);
+                    }
+                  
+                    return new BusinessResult(1, "success");
+                }
+                else
+                {
+                    // Trường hợp không tìm thấy OrderDetails
+                    return new BusinessResult(0, "No order details found for the given order ID.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
 
         public async Task<IBusinessResult> GetAll()
         {

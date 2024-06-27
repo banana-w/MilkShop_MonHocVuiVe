@@ -1,4 +1,5 @@
 ﻿using MilkShop.Business.OrderBusinesses;
+using MilkShop.Business.OrderDetailBusinesses;
 using MilkShop.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,12 @@ namespace MilkShop.WPF.UI
     public partial class wOrder : Window
     {
         private readonly OrderBusiness _orderBusiness;
+        private readonly OrderDetailBusiness _orderDetailBusiness;
         public wOrder()
         {
             InitializeComponent();
             _orderBusiness ??= new OrderBusiness();
+            _orderDetailBusiness ??= new OrderDetailBusiness();
             LoadGrdOrder();
         }
         private async void ButtonSave_Click(object sender, RoutedEventArgs e)
@@ -34,7 +37,7 @@ namespace MilkShop.WPF.UI
             {
                 int orderId = -1;
                 int.TryParse(txtOrderId.Text, out orderId);
-                var item = await _orderBusiness.GetById(orderId);
+                var item = await _orderBusiness.FindById(orderId);
                 if (item.Data == null)
                 {
                     var NewOrder = new Order()
@@ -155,15 +158,17 @@ namespace MilkShop.WPF.UI
 
             if (MessageBox.Show("Do you want to delete this order?", "Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
+                var resultX = await _orderDetailBusiness.DeleteByOrderId(orderId.Value);
                 var result = await _orderBusiness.DeleteAsync(orderId.Value);
-                MessageBox.Show($"{result.Message}", "Delete");
+               
+                MessageBox.Show($"{result.Message}, {resultX.Message}", "Delete");
                 LoadGrdOrder();
             }
         }
 
         private async void LoadGrdOrder()
         {
-            var result = await _orderBusiness.GetAll(1, 100);
+            var result = await _orderBusiness.GetAll();
             if (result.Status > 0 && result.Data != null)
             {
                 grdOrder.ItemsSource = null;
@@ -173,6 +178,11 @@ namespace MilkShop.WPF.UI
             {
                 grdOrder.ItemsSource = new List<Order>();
             }
+        }
+
+        private void grdOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
