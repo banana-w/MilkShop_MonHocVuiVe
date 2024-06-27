@@ -26,7 +26,7 @@ namespace MilkShop.Pages.ProductPages
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
         [BindProperty(SupportsGet = true)]
-        public int Size { get; set; } = 5;
+        public int Size { get; set; } = 6;
 
         private async Task<Paginate<Product>> GetProduct()
         {
@@ -58,6 +58,7 @@ namespace MilkShop.Pages.ProductPages
             {
                 Product = await GetProduct();
             }
+            ViewData["SuccessMessage"] = TempData["SuccessMessage"];
         }
     }
 }

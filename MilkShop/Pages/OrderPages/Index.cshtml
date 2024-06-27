@@ -11,26 +11,35 @@
     </a>
 </div>
 
+<form method="get">
+    <div class="input-group">
+        <input class="form-control" asp-for="SearchTerm">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
         <thead class="bg-primary text-white">
             <tr>
-                <th>@Html.DisplayNameFor(model => model.Order[0].OrderDate)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].OrderStatus)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].OrderTotalAmount)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].PaymentMethodId)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].PaymentStatus)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].Status)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].CreatedDate)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].ShippingAddress)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].BillingAddress)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].ShippingMethod)</th>
-                <th>@Html.DisplayNameFor(model => model.Order[0].User)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].OrderDate)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].OrderStatus)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].OrderTotalAmount)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].PaymentMethodId)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].PaymentStatus)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].Status)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].CreatedDate)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].ShippingAddress)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].BillingAddress)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].ShippingMethod)</th>
+                <th>@Html.DisplayNameFor(model => model.Order.Items[0].User)</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Order)
+            @foreach (var item in Model.Order.Items)
             {
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
@@ -106,4 +115,13 @@
             }
         </tbody>
     </table>
+    <div>
+        <a asp-page="/OrderPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex - 1)"
+           class="@(Model.PageIndex == 1 ? "disabled" : "") btn btn-primary">Previous</a>
+
+        <span>Page @Model.Order.Page of @Model.Order.TotalPages </span>
+
+        <a asp-page="/OrderPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex + 1)"
+           class="@(Model.PageIndex == Model.Order.TotalPages ? "disabled" : "") btn btn-primary">Next</a>
+    </div>
 </div>

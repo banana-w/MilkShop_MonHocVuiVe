@@ -9,18 +9,22 @@ using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
 using MilkShopBusiness.ProductBrandBusiness;
 using MilkShopBusiness.ProductBusiness;
+using MilkShopBusiness.ProductCategoryBusiness;
 
 namespace MilkShop.Pages.ProductPages
 {
     public class EditModel : PageModel
     {
         private readonly IProductBusiness _productBusiness;
-        private readonly IProductBrandBusiness _productBrand;
+        private readonly IProductBrandBusiness _productBrandBusiness;
+        private readonly IProductCategoryBusiness _productCategoryBusiness;
 
-        public EditModel(IProductBusiness productBusiness, IProductBrandBusiness productBrandBusiness)
+        public EditModel(IProductBusiness productBusiness, IProductBrandBusiness productBrandBusiness, 
+            IProductCategoryBusiness productCategoryBusiness)
         {
             _productBusiness = productBusiness;
-            _productBrand = productBrandBusiness;
+            _productBrandBusiness = productBrandBusiness;
+            _productCategoryBusiness = productCategoryBusiness;
         }
 
         [BindProperty]
@@ -39,9 +43,10 @@ namespace MilkShop.Pages.ProductPages
                 return NotFound();
             }
             Product = (Product)product.Data;
-            var productBrand = await _productBrand.GetAll();
+            var productBrand = await _productBrandBusiness.GetAll();
+            var productCate = await _productCategoryBusiness.GetCategories();
             ViewData["ProductBrandId"] = new SelectList((System.Collections.IEnumerable)productBrand.Data, "ProductBrandId", "ProductBrandName");
-            //ViewData["ProductCategoryId"] = new SelectList(_context.ProductCategories, "ProductCategoryId", "ProductCategoryId");
+            ViewData["ProductCategoryId"] = new SelectList((System.Collections.IEnumerable)productCate.Data, "ProductCategoryId", "ProductCategoryName");
             return Page();
         }
 
@@ -51,11 +56,21 @@ namespace MilkShop.Pages.ProductPages
         {
             try
             {
-                await _productBusiness.UpdateAsync(Product);
+                var result = await _productBusiness.UpdateAsync(Product);
+                if (result.Status > 0)
+                {
+                    TempData["SuccessMessage"] = result.Message;
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = result.Message;
+                    return Page();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_productBusiness.GetById(Product.ProductId) == null)
+                if (_productBusiness.FindId(Product.ProductId) == null)
                 {
                     return NotFound();
                 }

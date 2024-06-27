@@ -1,0 +1,271 @@
+﻿@page
+@model MilkShop.Pages.HomePageModel
+@{
+    Layout = null;
+    var userId = HttpContext.Session.GetString("UserID");
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Shop - Hãy kiếm cho mình sức khỏe</title>
+
+    <!--
+      - favicon
+    -->
+    <link rel="shortcut icon" href="./favicon/favicon.svg" type="image/svg+xml">
+
+    <!--
+      - custom css link
+    -->
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body>
+
+    <!--
+      - #HEADER
+    -->
+
+    <header class="header" data-header>
+        <div class="container">
+
+            <h1>
+                <a asp-page="HomePage" class="logo">Milk Store</a>
+            </h1>
+
+            <button class="nav-open-btn" aria-label="Open Menu" data-nav-open-btn>
+                <ion-icon name="menu-outline"></ion-icon>
+            </button>
+
+            <nav class="navbar" data-navbar>
+
+                <button class="nav-close-btn" aria-label="Close Menu" data-nav-close-btn>
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+
+                <a href="#" class="logo">Milk Store</a>
+
+                <ul class="navbar-list">
+
+                    <li>
+                        <a asp-page="HomePage" class="navbar-link" data-nav-link>
+                            <span>Home</span>
+
+                            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-page="ProductPages/Index" class="navbar-link" data-nav-link>
+                            <span>Product</span>
+
+                            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-page="CustomerPages/Index" class="navbar-link" data-nav-link>
+                            <span>Customer</span>
+
+                            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-page="CompanyPages/Index" class="navbar-link" data-nav-link>
+                            <span>Company</span>
+
+                            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-page="ProductCategoryPages/Index" class="navbar-link" data-nav-link>
+                            <span>Catagory</span>
+
+                            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-page="OrderPages/Index" class="navbar-link" data-nav-link>
+                            <span>Order</span>
+                            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-page="/ProductBrandPages/Index" class="navbar-link" data-nav-link>
+                            <span>Product Brand</span>
+                            <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+            <div class="header-action">
+                @if (string.IsNullOrEmpty(userId))
+                {
+                    <button class="search-btn" aria-label="Search">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </button>
+
+                    <button class="btn btn-primary" onclick="window.location.href='./Index'">
+                        <span>Login</span>
+                        <ion-icon name="log-in-outline"></ion-icon>
+                    </button>
+                }
+                else
+                {
+                    <button class="search-btn" aria-label="Search">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </button>
+
+                    <button class="btn btn-primary" onclick="window.location.href='./Logout'">
+                        <span>Logout</span>
+                        <ion-icon name="log-in-outline"></ion-icon>
+                    </button>
+                }
+
+
+            </div>
+
+        </div>
+    </header>
+
+
+
+
+
+    <main>
+        <article>
+
+            <!--
+              - #HERO
+            -->
+
+            <section class="hero" id="home">
+                <div class="container">
+
+                    <p class="section-subtitle">
+                        <img src="./img/subtitle-img-white.png" width="32" height="7" alt="Wavy line">
+
+                        <span>Welcome to Milk Shop</span>
+                    </p>
+
+                    <h2 class="h1 hero-title">
+                        MILK WORLD<strong>FOR YOU</strong>
+                    </h2>
+
+                    <p class="hero-text">
+                        Always believe in health
+                    </p>
+
+                    <button class="btn btn-primary" onclick="window.location.href='./ProductPages/Index'">
+                        <span>Buy</span>
+
+                        <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
+                    </button>
+
+                </div>
+            </section>
+
+
+
+
+
+            <!--
+              - #FEATURES
+            -->
+
+            <section class="section features">
+                <div class="container">
+
+                    <ul class="features-list">
+
+                        <li class="features-item">
+                            <div class="item-icon">
+                                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                            </div>
+
+                            <div>
+                                <h3 class="h4 item-title">An toàn</h3>
+
+                                <p class="item-text">
+                                    Sit amet consecte adiscine
+                                    eiusm temor ultrices.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="features-item">
+                            <div class="item-icon">
+                                <ion-icon name="water-outline"></ion-icon>
+                            </div>
+
+                            <div>
+                                <h3 class="h4 item-title">Đã kiểm định</h3>
+
+                                <p class="item-text">
+                                    Sit amet consecte adiscine
+                                    eiusm temor ultrices.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="features-item">
+                            <div class="item-icon">
+                                <ion-icon name="leaf-outline"></ion-icon>
+                            </div>
+
+                            <div>
+                                <h3 class="h4 item-title">Chất lượng</h3>
+
+                                <p class="item-text">
+                                    Sit amet consecte adiscine
+                                    eiusm temor ultrices.
+                                </p>
+                            </div>
+                        </li>
+
+                        <li class="features-item">
+                            <div class="item-icon">
+                                <ion-icon name="cash-outline"></ion-icon>
+                            </div>
+
+                            <div>
+                                <h3 class="h4 item-title">GIá hợp lý</h3>
+
+                                <p class="item-text">
+                                    Sit amet consecte adiscine
+                                    eiusm temor ultrices.
+                                </p>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <!--
+      - custom js link
+    -->
+    <script src="./js/script.js"></script>
+
+    <!--
+      - ionicon link
+    -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+</body>
+

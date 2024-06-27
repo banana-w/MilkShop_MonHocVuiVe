@@ -37,10 +37,9 @@ public partial class MilkShopContext : DbContext
     {
         modelBuilder.Entity<Company>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Company");
+            entity.ToTable("Company");
 
+            entity.Property(e => e.CompanyId).HasColumnName("companyId");
             entity.Property(e => e.CompanyAddress)
                 .HasMaxLength(50)
                 .HasColumnName("companyAddress");
@@ -50,9 +49,6 @@ public partial class MilkShopContext : DbContext
             entity.Property(e => e.CompanyFirstName)
                 .HasMaxLength(50)
                 .HasColumnName("companyFirstName");
-            entity.Property(e => e.CompanyId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("companyId");
             entity.Property(e => e.CompanyLastName)
                 .HasMaxLength(50)
                 .HasColumnName("companyLastName");
@@ -96,10 +92,6 @@ public partial class MilkShopContext : DbContext
                 .HasMaxLength(10)
                 .IsFixedLength()
                 .HasColumnName("preferred_language");
-            entity.Property(e => e.Password)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasColumnName("password");
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsFixedLength()

@@ -4,6 +4,9 @@ using MilkShop.Data.Models;
 using MilkShopBusiness.ProductCategoryBusiness;
 using MilkShopBusiness.ProductBrandBusiness;
 using MilkShopBusiness.ProductBusiness;
+using MilkShop.Business.LoginBusiness;
+using MilkShop.Data.Repository;
+using MilkShop.Business.CompanyBusiness;
 
 namespace MilkShop
 {
@@ -31,6 +34,9 @@ namespace MilkShop
                 => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IProductBrandBusiness, ProductBrandBusiness>();
             builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
+            builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+            builder.Services.AddScoped<ILoginBusiness, LoginBusiness>();
+            builder.Services.AddScoped<ICompanyBusiness, CompanyBusiness>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
