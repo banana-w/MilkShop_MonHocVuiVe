@@ -4,70 +4,81 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
-
-<div>
-    <h4>ProductBrand</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.ProductBrandName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.ProductBrandName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.CreatedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.CreatedDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.LogoUrl)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.LogoUrl)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.WebsiteUrl)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.WebsiteUrl)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.CountryOfOrigin)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.CountryOfOrigin)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.ContactEmail)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.ContactEmail)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductBrand.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductBrand.Address)
-        </dd>
-    </dl>
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Brand</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Brand</li>
+    </ol>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.ProductBrand.ProductBrandId">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+<!-- Single Page Header End -->
+<div class="container">
+    <h1>Details</h1>
+
+    <div>
+        <h4>ProductBrand</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.ProductBrandName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.ProductBrandName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.Status)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.CreatedDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.CreatedDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.Description)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.LogoUrl)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.LogoUrl)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.WebsiteUrl)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.WebsiteUrl)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.CountryOfOrigin)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.CountryOfOrigin)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.ContactEmail)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.ContactEmail)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProductBrand.Address)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProductBrand.Address)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-page="./Edit" asp-route-id="@Model.ProductBrand.ProductBrandId">Edit</a> |
+        <a asp-page="./Index">Back to List</a>
+    </div>
 </div>

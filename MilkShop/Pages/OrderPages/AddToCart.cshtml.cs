@@ -17,13 +17,14 @@ namespace MilkShop.Pages.OrderPages
             _context = context;
         }
 
-        public IActionResult OnGet(int id)
+        public IActionResult OnGet(int id, int pageIndex, string searchTerm)
         {
             var product = _context.Products.Find(id);
             if (product == null)
             {
                 return NotFound();
             }
+            if (pageIndex == 0) pageIndex = 1;
 
             var cart = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart") ?? new ShoppingCart();
 
@@ -35,10 +36,11 @@ namespace MilkShop.Pages.OrderPages
                 ProductPrice = product.ProductPrice,
                 Quantity = 1 // Default quantity to add to cart
             });
-            TempData["SuccessMessage"] = $"{product.ProductName} is added to cart";            
+            TempData["SuccessMessage"] = $"{product.ProductName} is added to cart";
+            HttpContext.Session.SetInt32("cartQuantity", cart.Items.Count);
             HttpContext.Session.SetObjectAsJson("Cart", cart);
 
-            return RedirectToPage("/ProductPages/Index");
+            return RedirectToPage("/ProductPages/Index", new {PageIndex = pageIndex, SearchTerm = searchTerm});
         }
     }
 }

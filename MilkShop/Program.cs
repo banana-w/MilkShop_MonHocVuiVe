@@ -28,6 +28,7 @@ namespace MilkShop
                 options.Cookie.HttpOnly = true; // Ensure the cookie is accessible only to the server.
                 options.Cookie.IsEssential = true; // Make the session cookie essential.
             });
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<MilkShop.Business.OrderBusinesses.IOrderBusiness, MilkShop.Business.OrderBusinesses.OrderBusiness>();
             builder.Services.AddScoped<MilkShop.Business.OrderDetailBusinesses.IOrderDetailBusiness, MilkShop.Business.OrderDetailBusinesses.OrderDetailBusiness>();
             builder.Services.AddDbContext<MilkShopContext>(options
