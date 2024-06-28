@@ -113,6 +113,7 @@ namespace MilkShop.Pages.OrderPages
 
             // Xóa giỏ hàng sau khi tạo đơn hàng thành công
             HttpContext.Session.Remove("Cart");
+            HttpContext.Session.Remove("cartQuantity");
 
             TempData.Remove("CartData");
             TempData.Remove("TotalAmount");

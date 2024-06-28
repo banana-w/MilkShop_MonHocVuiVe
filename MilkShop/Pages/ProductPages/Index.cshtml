@@ -123,19 +123,19 @@
                                             <h4>@Html.DisplayFor(modelItem => item.ProductName)</h4>
                                             <p>@Html.DisplayFor(modelItem => item.ProductDescription)</p>
                                             <div class="d-flex justify-content-between flex-lg-wrap">
-                                                <p class="text-dark fs-5 fw-bold mb-0">@Html.DisplayFor(modelItem => item.ProductPrice)₫ / kg</p>
-                                                <a asp-page="/OrderPages/AddToCart" asp-route-id="@item.ProductId" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                <p class="text-dark fs-5 fw-bold mb-0">@((int)item.ProductPrice)₫</p>
+                                                <a asp-page="/OrderPages/AddToCart" asp-route-id="@item.ProductId" asp-route-pageIndex="@Model.PageIndex" asp-route-searchTerm="@Model.SearchTerm" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             }
                             <div class="col-12">
-                                <div class="pagination d-flex justify-content-center mt-5">
+                                <div class="pagination d-flex justify-content-center align-items-center mt-5">
                                     <a asp-page="/ProductPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex - 1)"
                                        class="@(Model.PageIndex == 1 ? "disabled" : "") btn btn-primary">Previous</a>
 
-                                    <span>Page @Model.Product.Page of @Model.Product.TotalPages </span>
+                                    <span class="m-2">Page @Model.Product.Page of @Model.Product.TotalPages </span>
 
                                     <a asp-page="/ProductPages/Index" asp-route-SearchTerm="@Model.SearchTerm" asp-route-PageIndex="@(Model.PageIndex + 1)"
                                        class="@(Model.PageIndex == Model.Product.TotalPages ? "disabled" : "") btn btn-primary">Next</a>
@@ -221,10 +221,9 @@
                 @Html.DisplayFor(modelItem => item.ProductCategory.ProductCategoryName)
             </td>
             <td>
-                <a asp-page="/OrderPages/AddToCart" asp-route-id="@item.ProductId">Add to Cart</a> |
-                <a asp-page="./Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ProductId">Delete</a>
+                <a asp-page="./Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a asp-page="./Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Details</a>
+                <a asp-page="./Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Delete</a>
             </td>
         </tr>
 }

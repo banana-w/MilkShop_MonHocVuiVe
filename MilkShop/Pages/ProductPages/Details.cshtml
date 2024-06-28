@@ -31,7 +31,8 @@
                     <div class="col-lg-6">
                         <h4 class="fw-bold mb-3">@Html.DisplayFor(model => model.Product.ProductName)</h4>
                         <p class="mb-3">Category: @Html.DisplayFor(model => model.Product.ProductCategory.ProductCategoryName)</p>
-                        <h5 class="fw-bold mb-3">@Html.DisplayFor(model => model.Product.ProductPrice) $</h5>
+                        <h5 class="fw-bold mb-3">@((int)Model.Product.ProductPrice) ₫</h5>
+                        <h5 class="fw-bold mb-3">In stock: @Html.DisplayFor(model => model.Product.StockQuantity)</h5>
                         <div class="d-flex mb-4">
                             <i class="fa fa-star text-secondary"></i>
                             <i class="fa fa-star text-secondary"></i>
@@ -40,20 +41,8 @@
                             <i class="fa fa-star text-secondary"></i>
                         </div>
                         <p class="mb-4">@Html.DisplayFor(model => model.Product.ProductDescription)</p>
-                        <div class="input-group quantity mb-5" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                   
+                        <a asp-page="/OrderPages/AddToCart" asp-route-id="@Model.Product.ProductId" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
                     </div>
                     <div class="col-lg-12">
                         <nav>
@@ -216,7 +205,7 @@
                         <h4 class="mb-4">Featured products</h4>
                         <div class="d-flex align-items-center justify-content-start">
                             <div class="rounded" style="width: 100px; height: 100px;">
-                                <img src="img/milk-1.jpg" class="img-fluid rounded" alt="Vinamilk Fresh Milk">
+                                <img src="https://cdn.shopify.com/s/files/1/0761/8769/7443/files/FM100_ID_110_4.png?v=1701232695" class="img-fluid rounded" alt="Vinamilk Fresh Milk">
                             </div>
                             <div>
                                 <h6 class="mb-2">Sữa Tươi Vinamilk</h6>
@@ -235,7 +224,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-start">
                             <div class="rounded" style="width: 100px; height: 100px;">
-                                <img src="img/milk-2.jpg" class="img-fluid rounded" alt="TH True Milk">
+                                <img src="https://sieuthigiahoi.vn/resource/files/thung-48-hop-sua-tuoi-tiet-trung-nguyen-chat-khong-duong-th-true-milk-180ml-202104091501209650.jpg" class="img-fluid rounded" alt="TH True Milk">
                             </div>
                             <div>
                                 <h6 class="mb-2">Sữa Tươi TH True Milk</h6>
@@ -254,10 +243,10 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-start">
                             <div class="rounded" style="width: 100px; height: 100px;">
-                                <img src="img/milk-3.jpg" class="img-fluid rounded" alt="Dielac Alpha Milk Powder">
+                                <img src="https://images-handler.kamereo.vn/eyJidWNrZXQiOiJpbWFnZS1oYW5kbGVyLXByb2QiLCJrZXkiOiJzdXBwbGllci82NTQvUFJPRFVDVF9JTUFHRS9lYmFhMDhiNy0wNTcwLTQ5ZGMtOWIxNS1jMGY0MGU4ZDhiOTMuanBnIn0=" class="img-fluid rounded" alt="Dielac Alpha Milk Powder">
                             </div>
                             <div>
-                                <h6 class="mb-2">Sữa Bột Dielac Alpha</h6>
+                                <h6 class="mb-2">Sữa Bột TH True Milk</h6>
                                 <div class="d-flex mb-2">
                                     <i class="fa fa-star text-secondary"></i>
                                     <i class="fa fa-star text-secondary"></i>
@@ -273,7 +262,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-start">
                             <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="img/milk-4.jpg" class="img-fluid rounded" alt="Vinamilk Yogurt">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvfAH9U3Q24zCHjQJfL8dFDm8OA3moWkDJrQ&usqp=CAU" class="img-fluid rounded" alt="Vinamilk Yogurt">
                             </div>
                             <div>
                                 <h6 class="mb-2">Sữa Chua Vinamilk</h6>
@@ -292,7 +281,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-start">
                             <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="img/milk-5.jpg" class="img-fluid rounded" alt="Moc Chau Fresh Milk">
+                                <img src="https://www.mcmilk.com.vn/wp-content/uploads/2021/11/Sua-tuoi-thanh-trung-Co-duong-Hop-giay-900ml-upweb.png" class="img-fluid rounded" alt="Moc Chau Fresh Milk">
                             </div>
                             <div>
                                 <h6 class="mb-2">Sữa Tươi Mộc Châu</h6>
@@ -311,7 +300,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-start">
                             <div class="rounded me-4" style="width: 100px; height: 100px;">
-                                <img src="img/milk-6.jpg" class="img-fluid rounded" alt="Grow Plus Milk Powder">
+                                <img src="https://shopsuatramanh.com/upload/elfinder/sua-bot-grow-plus-xanh-900g-tu-1-tuoi-tro-len-1607.jpg" class="img-fluid rounded" alt="Grow Plus Milk Powder">
                             </div>
                             <div>
                                 <h6 class="mb-2">Sữa Bột Grow Plus</h6>
@@ -332,14 +321,6 @@
                             <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="position-relative">
-                            <img src="img/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
-                            <div class="position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);">
-                                <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -348,9 +329,9 @@
             <div class="owl-carousel vegetable-carousel justify-content-center">
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
+                        @* <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Parsely</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
@@ -362,9 +343,9 @@
                 </div>
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-1.jpg" class="img-fluid w-100 rounded-top" alt="">
+                        @* <img src="img/vegetable-item-1.jpg" class="img-fluid w-100 rounded-top" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Parsely</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
@@ -376,9 +357,9 @@
                 </div>
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-3.png" class="img-fluid w-100 rounded-top bg-light" alt="">
+                        @* <img src="img/vegetable-item-3.png" class="img-fluid w-100 rounded-top bg-light" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Banana</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
@@ -390,9 +371,9 @@
                 </div>
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-4.jpg" class="img-fluid w-100 rounded-top" alt="">
+                        @* <img src="img/vegetable-item-4.jpg" class="img-fluid w-100 rounded-top" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Bell Papper</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
@@ -404,9 +385,9 @@
                 </div>
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
+                        @* <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Potatoes</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
@@ -418,9 +399,9 @@
                 </div>
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
+                        @* <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Parsely</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
@@ -432,9 +413,9 @@
                 </div>
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
+                        @* <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Potatoes</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
@@ -446,9 +427,9 @@
                 </div>
                 <div class="border border-primary rounded position-relative vesitable-item">
                     <div class="vesitable-img">
-                        <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
+                        @* <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt=""> *@
                     </div>
-                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
+                    <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Milk</div>
                     <div class="p-4 pb-0 rounded-bottom">
                         <h4>Parsely</h4>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
