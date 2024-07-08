@@ -22,7 +22,7 @@ namespace MilkShop.WPFApp.UI
     /// </summary>
     public partial class wProduct : Window
     {
-        private readonly ProductBusiness _productBusiness;
+        private readonly IProductBusiness _productBusiness;
         public wProduct()
         {
             _productBusiness ??= new ProductBusiness();

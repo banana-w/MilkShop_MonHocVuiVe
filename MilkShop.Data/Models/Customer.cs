@@ -25,5 +25,7 @@ public partial class Customer
 
     public string? PreferredLanguage { get; set; }
 
+    public string? ImageUrl { get; set; }
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
