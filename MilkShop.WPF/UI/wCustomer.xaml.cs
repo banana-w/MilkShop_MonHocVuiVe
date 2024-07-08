@@ -18,11 +18,12 @@ using System.Windows.Shapes;
 namespace MilkShop.WPF.UI
 {
     /// <summary>
-    /// Interaction logic for Customer.xaml
+    /// Interaction logic for wCustomer.xaml
     /// </summary>
     public partial class wCustomer : Window
     {
-        private readonly CustomerBusiness _customerBusiness;
+        private readonly ICustomerBusiness _customerBusiness;
+
         public wCustomer()
         {
             InitializeComponent();
@@ -32,21 +33,23 @@ namespace MilkShop.WPF.UI
 
         private async void Load()
         {
-            var result = await _customerBusiness.GetAll(1, 100);
-            if (result.Status > 0 && result.Data != null)
+            try
             {
-                grdCustomer.ItemsSource = null;
-                grdCustomer.ItemsSource = result.Data as List<Customer>;
+                var result = await _customerBusiness.GetAllCustomer();
+
+                if (result.Status > 0 && result.Data != null)
+                {
+                    grdCustomer.ItemsSource = result.Data as List<Customer>;
+                }
+                else
+                {
+                    grdCustomer.ItemsSource = new List<Customer>();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                grdCustomer.ItemsSource = new List<Customer>();
+                MessageBox.Show($"Error loading data: {ex.Message}");
             }
-        }
-
-        private void btnSave_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private async void btnCreate_Click(object sender, RoutedEventArgs e)
@@ -57,7 +60,9 @@ namespace MilkShop.WPF.UI
                 {
                     UserName = txtCustomerName.Text,
                     UserEmail = txtCustomerEmail.Text,
+                    Status = cmbStatus.Text,
                     PhoneNumber = txtCustomerPhone.Text,
+                    CreatedDate = DateOnly.FromDateTime(DateTime.Now), 
                     Address = txtCustomerAddress.Text,
                     DateOfBirth = DateOnly.Parse(txtDateOfBirth.Text),
                     Password = txtPassword.Password,
@@ -75,20 +80,73 @@ namespace MilkShop.WPF.UI
             }
         }
 
-        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        private async void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (grdCustomer.SelectedItem is Customer selectedCustomer)
+                {
+                    selectedCustomer.UserName = txtCustomerName.Text;
+                    selectedCustomer.UserEmail = txtCustomerEmail.Text;
+                    selectedCustomer.Status = cmbStatus.Text;
+                    selectedCustomer.PhoneNumber = txtCustomerPhone.Text;
+                    selectedCustomer.Address = txtCustomerAddress.Text;
+                    selectedCustomer.DateOfBirth = DateOnly.Parse(txtDateOfBirth.Text);
+                    selectedCustomer.Password = txtPassword.Password;
+                    selectedCustomer.PreferredLanguage = txtPreferredLanguage.Text;
+                    selectedCustomer.ImageUrl = txtImageUrl.Text;
 
+                    var result = await _customerBusiness.UpdateAsync(selectedCustomer);
+                    MessageBox.Show(result.Message, "Update");
+                    Load();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a customer to update.", "Update");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error");
+            }
         }
 
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                if (grdCustomer.SelectedItem is Customer selectedCustomer)
+                {
+                    var result = await _customerBusiness.DeleteAsync(selectedCustomer.UserId);
+                    MessageBox.Show(result.Message, "Delete");
+                    Load();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a customer to delete.", "Delete");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error");
+            }
         }
 
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void grdCustomer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            if (grdCustomer.SelectedItem is Customer selectedCustomer)
+            {
+                txtCustomerId.Text = selectedCustomer.UserId.ToString();
+                txtCustomerName.Text = selectedCustomer.UserName;
+                txtCustomerEmail.Text = selectedCustomer.UserEmail;
+                cmbStatus.SelectedItem = selectedCustomer.Status == "Active" ? "Active" : "Inactive";
+                txtCustomerPhone.Text = selectedCustomer.PhoneNumber;
+                txtCustomerAddress.Text = selectedCustomer.Address;
+                txtDateOfBirth.Text = selectedCustomer.DateOfBirth.ToString();
+                txtPassword.Password = selectedCustomer.Password;
+                txtPreferredLanguage.Text = selectedCustomer.PreferredLanguage;
+                txtImageUrl.Text = selectedCustomer.ImageUrl;
+            }
         }
-
     }
 }

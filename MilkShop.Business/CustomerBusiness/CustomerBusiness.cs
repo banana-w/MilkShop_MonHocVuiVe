@@ -18,6 +18,7 @@ namespace MilkShop.Business.CustomerBusiness
         Task<IBusinessResult> Save(Customer customer);
         Task<IBusinessResult> DeleteAsync(int id);
         Task<IBusinessResult> Search(string searchTerm, int page, int size);
+        Task<IBusinessResult> GetAllCustomer();
 
     }
 
@@ -80,6 +81,27 @@ namespace MilkShop.Business.CustomerBusiness
             }
         }
 
+        public async Task<IBusinessResult> GetAllCustomer()
+        {
+            try
+            {
+                //var currencies = _DAO.GetAll();
+                var customers = await _unitOfWork.CustomerRepository.GetAllAsync();
+                if (customers == null)
+                {
+                    return new BusinessResult(4, "No currency data");
+                }
+                else
+                {
+                    return new BusinessResult(1, "Get currency list success", customers);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
         public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
         {
             try
@@ -131,13 +153,13 @@ namespace MilkShop.Business.CustomerBusiness
             try
             {
                 var newCustomer = await _unitOfWork.CustomerRepository.CreateAsync(customer);
-                if (newCustomer > 1)
+                if (newCustomer >= 1)
                 {
                     return new BusinessResult(1, "Create successfully");
                 }
                 else
                 {
-                    return new BusinessResult(1, "Create fail");
+                    return new BusinessResult(-1, "Create fail");
                 }
             }
             catch (Exception ex)
