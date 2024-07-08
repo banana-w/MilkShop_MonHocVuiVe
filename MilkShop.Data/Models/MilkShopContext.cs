@@ -102,6 +102,9 @@ public partial class MilkShopContext : DbContext
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .HasColumnName("userName");
+            entity.Property(e => e.ImageUrl)
+               .HasColumnType("nvarchar(max)")
+               .HasColumnName("image_url");
         });
 
         modelBuilder.Entity<Order>(entity =>
