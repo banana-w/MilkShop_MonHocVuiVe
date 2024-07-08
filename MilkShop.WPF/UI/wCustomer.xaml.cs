@@ -28,6 +28,10 @@ namespace MilkShop.WPF.UI
         {
             InitializeComponent();
             _customerBusiness ??= new CustomerBusiness();
+            txtCustomerId.IsReadOnly = true;
+            cmbStatus.Items.Add(new ComboBoxItem { Content = "Active" });
+            cmbStatus.Items.Add(new ComboBoxItem { Content = "Inactive" });
+            cmbStatus.SelectedIndex = 0;
             Load();
         }
 
@@ -117,7 +121,7 @@ namespace MilkShop.WPF.UI
             {
                 if (grdCustomer.SelectedItem is Customer selectedCustomer)
                 {
-                    var result = await _customerBusiness.DeleteAsync(selectedCustomer.UserId);
+                    var result = await _customerBusiness.DeleteCustomer(selectedCustomer.UserId);
                     MessageBox.Show(result.Message, "Delete");
                     Load();
                 }
@@ -139,7 +143,6 @@ namespace MilkShop.WPF.UI
                 txtCustomerId.Text = selectedCustomer.UserId.ToString();
                 txtCustomerName.Text = selectedCustomer.UserName;
                 txtCustomerEmail.Text = selectedCustomer.UserEmail;
-                cmbStatus.SelectedItem = selectedCustomer.Status == "Active" ? "Active" : "Inactive";
                 txtCustomerPhone.Text = selectedCustomer.PhoneNumber;
                 txtCustomerAddress.Text = selectedCustomer.Address;
                 txtDateOfBirth.Text = selectedCustomer.DateOfBirth.ToString();

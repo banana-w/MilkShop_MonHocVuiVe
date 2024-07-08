@@ -17,6 +17,7 @@ namespace MilkShop.Business.CustomerBusiness
         Task<IBusinessResult> UpdateAsync(Customer customer);
         Task<IBusinessResult> Save(Customer customer);
         Task<IBusinessResult> DeleteAsync(int id);
+        Task<IBusinessResult> DeleteCustomer(int id);
         Task<IBusinessResult> Search(string searchTerm, int page, int size);
         Task<IBusinessResult> GetAllCustomer();
 
@@ -86,7 +87,7 @@ namespace MilkShop.Business.CustomerBusiness
             try
             {
                 //var currencies = _DAO.GetAll();
-                var customers = await _unitOfWork.CustomerRepository.GetAllAsync();
+                var customers = await _unitOfWork.CustomerRepository.GetAllActiveCustomers();
                 if (customers == null)
                 {
                     return new BusinessResult(4, "No currency data");
@@ -180,6 +181,26 @@ namespace MilkShop.Business.CustomerBusiness
                 else
                 {
                     return new BusinessResult(-1, "Update fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> DeleteCustomer(int id)
+        {
+            try
+            {
+                var removeCustomer = await _unitOfWork.CustomerRepository.RemoveCustomerAsync(id);
+                if (removeCustomer != null)
+                {
+                    return new BusinessResult(1, "Remove successfully");
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Remove fail");
                 }
             }
             catch (Exception ex)
