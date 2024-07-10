@@ -58,6 +58,9 @@ namespace MilkShop.Pages.CompanyPages
             {
                 Company = await GetCompany();
             }
+            ViewData["SuccessMessage"] = TempData["SuccessMessage"];
         }
+
+
     }
 }
