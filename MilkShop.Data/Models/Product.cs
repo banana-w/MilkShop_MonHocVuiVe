@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MilkShop.Data.Models;
 
@@ -11,6 +12,7 @@ public partial class Product
 
     public string? ProductDescription { get; set; }
 
+    [Range(1, int.MaxValue, ErrorMessage = "Price must be greater than zero.")]
     public decimal ProductPrice { get; set; }
 
     public string? ProductImage { get; set; }
@@ -23,6 +25,7 @@ public partial class Product
 
     public DateOnly? CreatedDate { get; set; }
 
+    [Range(0, int.MaxValue, ErrorMessage = "Stock must be greater than zero.")]
     public int StockQuantity { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
