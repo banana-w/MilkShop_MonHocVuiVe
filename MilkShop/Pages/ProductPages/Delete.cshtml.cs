@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductBusiness;
 
 namespace MilkShop.Pages.ProductPages
 {
     public class DeleteModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductBusiness _productBusiness;
 
-        public DeleteModel(MilkShop.Data.Models.MilkShopContext context)
+        public DeleteModel(IProductBusiness productBusiness)
         {
-            _context = context;
+            _productBusiness = productBusiness;
         }
 
         [BindProperty]
@@ -28,7 +29,7 @@ namespace MilkShop.Pages.ProductPages
                 return NotFound();
             }
 
-            var product = await _context.Products.FirstOrDefaultAsync(m => m.ProductId == id);
+            var product = await _productBusiness.GetById((int)id);
 
             if (product == null)
             {
@@ -36,7 +37,7 @@ namespace MilkShop.Pages.ProductPages
             }
             else
             {
-                Product = product;
+                Product = (Product)product.Data;
             }
             return Page();
         }
@@ -48,12 +49,12 @@ namespace MilkShop.Pages.ProductPages
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productBusiness.FindId((int)id);
             if (product != null)
             {
-                Product = product;
-                _context.Products.Remove(Product);
-                await _context.SaveChangesAsync();
+                Product = (Product)product.Data;
+                Product.Status = "Deactive";
+                await _productBusiness.UpdateAsync(Product);
             }
 
             return RedirectToPage("./Index");

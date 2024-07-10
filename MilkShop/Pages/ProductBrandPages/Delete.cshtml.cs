@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MilkShop.Data.Models;
+using MilkShopBusiness.ProductBrandBusiness;
 
 namespace MilkShop.Pages.ProductBrandPages
 {
     public class DeleteModel : PageModel
     {
-        private readonly MilkShop.Data.Models.MilkShopContext _context;
+        private readonly IProductBrandBusiness _productBrandBusiness;
 
-        public DeleteModel(MilkShop.Data.Models.MilkShopContext context)
+        public DeleteModel(IProductBrandBusiness productBrandBusiness)
         {
-            _context = context;
+            _productBrandBusiness = productBrandBusiness;
         }
 
         [BindProperty]
@@ -28,7 +29,7 @@ namespace MilkShop.Pages.ProductBrandPages
                 return NotFound();
             }
 
-            var productbrand = await _context.ProductBrands.FirstOrDefaultAsync(m => m.ProductBrandId == id);
+            var productbrand = await _productBrandBusiness.GetById((int)id);
 
             if (productbrand == null)
             {
@@ -36,7 +37,7 @@ namespace MilkShop.Pages.ProductBrandPages
             }
             else
             {
-                ProductBrand = productbrand;
+                ProductBrand = (ProductBrand)productbrand.Data;
             }
             return Page();
         }
@@ -48,14 +49,14 @@ namespace MilkShop.Pages.ProductBrandPages
                 return NotFound();
             }
 
-            var productbrand = await _context.ProductBrands.FindAsync(id);
-            if (productbrand != null)
+            var productbrand = await _productBrandBusiness.FindId((int)id);
+            if (productbrand.Status == 1)
             {
-                ProductBrand = productbrand;
-                _context.ProductBrands.Remove(ProductBrand);
-                await _context.SaveChangesAsync();
-            }
+                ProductBrand = (ProductBrand)productbrand.Data;
+                ProductBrand.Status = "Deactive";
+                await _productBrandBusiness.UpdateAsync(ProductBrand);
 
+            }
             return RedirectToPage("./Index");
         }
     }

@@ -13,6 +13,12 @@
         <li class="breadcrumb-item active text-white">Edit</li>
     </ol>
 </div>
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
 <!-- Single Page Header End -->
 <div class="container">
     <h1>Edit</h1>
