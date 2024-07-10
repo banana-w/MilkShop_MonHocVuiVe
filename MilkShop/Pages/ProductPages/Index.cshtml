@@ -109,8 +109,7 @@
                         <div class="row g-4 justify-content-center">
 
                             @foreach (var item in Model.Product.Items)
-                            {   @if (item.Status != "Deactive")
-                                {
+                            {   
                                     <div class="col-md-6 col-lg-6 col-xl-4">
                                         <div class="rounded position-relative fruite-item">
                                             <div class="fruite-img border border-secondary border-bottom-0 rounded-top">
@@ -129,7 +128,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                }
                             }
                             <div class="col-12">
                                 <div class="pagination d-flex justify-content-center align-items-center mt-5">
@@ -155,8 +153,7 @@
 <h1>Product</h1>
 
 <p>
-    <a asp-page="Create">Create New</a> |
-    <a asp-page="/OrderPages/ViewCart">View Cart</a>
+    <a class="btn btn-sm btn-outline-primary" asp-page="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
