@@ -79,8 +79,6 @@ namespace MilkShop.Pages.ProductPages
                     throw;
                 }
             }
-
-            return RedirectToPage("./Index");
-        }
+       }
     }
 }

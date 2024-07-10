@@ -26,14 +26,6 @@ namespace MilkShop.Pages.Profile
                 {
                     Customer = customerResponse.Data as Customer;
                 }
-                else
-                {
-                    RedirectToPage("/Index");
-                }
-            }
-            else
-            {
-                RedirectToPage("/Index");
             }
         }
 

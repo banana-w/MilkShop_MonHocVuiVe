@@ -16,6 +16,7 @@ namespace MilkShopBusiness.ProductBrandBusiness
         Task<IBusinessResult> GetPagingList(int page, int size);
         Task<IBusinessResult> GetAll();
         Task<IBusinessResult> GetById(int id);
+        Task<IBusinessResult> FindId(int id);
         Task<IBusinessResult> UpdateAsync(ProductBrand productBrand);
         Task<IBusinessResult> Save(ProductBrand productBrand);
         Task<IBusinessResult> DeleteAsync(int id);
@@ -71,6 +72,27 @@ namespace MilkShopBusiness.ProductBrandBusiness
                     selector: x => x,
                     predicate: x => x.ProductBrandId == id
                     );
+                if (productBrand != null)
+                {
+                    return new BusinessResult(1, "Get product brand successfully", productBrand);
+                }
+                else
+                {
+                    return new BusinessResult(-1, "Get product brand fail");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, ex.Message);
+            }
+        }
+        public async Task<IBusinessResult> FindId(int id)
+        {
+            
+
+            try
+            {
+                var productBrand = await _unitOfWork.ProductBrandRepository.GetByIdAsync(id);
                 if (productBrand != null)
                 {
                     return new BusinessResult(1, "Get product brand successfully", productBrand);
