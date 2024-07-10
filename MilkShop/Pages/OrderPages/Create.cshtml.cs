@@ -18,6 +18,7 @@ namespace MilkShop.Pages.OrderPages
         private readonly MilkShop.Data.Models.MilkShopContext _context;
         private readonly MilkShop.Business.OrderBusinesses.IOrderBusiness _orderBusiness;
         private readonly MilkShop.Business.OrderDetailBusinesses.IOrderDetailBusiness _orderDetailBusiness;
+        public int UserID { get; set; }
 
         public CreateModel(MilkShop.Data.Models.MilkShopContext context, MilkShop.Business.OrderBusinesses.IOrderBusiness orderBusiness,
             MilkShop.Business.OrderDetailBusinesses.IOrderDetailBusiness orderDetailBusiness)
@@ -31,7 +32,11 @@ namespace MilkShop.Pages.OrderPages
         {
             var cartData = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart");
             var totalAmount = HttpContext.Session.GetObjectFromJson<decimal>("TotalAmount");
-
+            var userIdFromSession = HttpContext.Session.GetInt32("UserID");
+            if (userIdFromSession.HasValue)
+            {
+                UserID = userIdFromSession.Value;
+            }
             TempData["CartData"] = cartData;
             TempData["TotalAmount"] = totalAmount;
 
@@ -53,21 +58,28 @@ namespace MilkShop.Pages.OrderPages
             //List<CartItem> cartItems = JsonConvert.DeserializeObject<List<CartItem>>(Cart);
             var cartData = HttpContext.Session.GetObjectFromJson<ShoppingCart>("Cart");
             var totalAmount = HttpContext.Session.GetObjectFromJson<decimal>("TotalAmount");
+            var userIdFromSession = HttpContext.Session.GetInt32("UserID");
+            if (userIdFromSession.HasValue)
+            {
+                UserID = userIdFromSession.Value;
+            }
+
 
             TempData["CartData"] = cartData;
             TempData["TotalAmount"] = totalAmount;
+            
             //if (!ModelState.IsValid)
             //{
             //    return Page();
             //}
 
             // Giải mã dữ liệu giỏ hàng từ Cart
-            
 
+            var x = UserID;
             // Tạo đối tượng Order mới
             Order newOrder = new Order
             {
-                UserId = Order.UserId,
+                UserId = UserID,
                 OrderDate = DateTime.Now,
                 OrderTotalAmount = totalAmount,
                 OrderStatus = Order.Status,
