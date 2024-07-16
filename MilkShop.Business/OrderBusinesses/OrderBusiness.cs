@@ -80,7 +80,7 @@ namespace MilkShop.Business.OrderBusinesses
                     selector: x => x,
                     page: page,
                     size: size,
-                    include: x => x.Include(p => p.OrderDetails)
+                    include: x => x.Include(p => p.OrderDetails).Include(x => x.User)
                     );
                 if (orders == null)
                 {
