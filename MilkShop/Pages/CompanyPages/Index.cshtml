@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var userId = HttpContext.Session.GetString("UserID");
 }
 
 <!-- Single Page Header start -->
@@ -29,11 +30,21 @@
     </div>
 }
 
-<h1>Index</h1>
+@if (string.IsNullOrEmpty(userId))
+{
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+}
+else
+{
+    
+    <p>
+        <a class="btn btn-sm btn-outline-primary" asp-page="Create">Create New</a>
+    </p>
+    
+    
+}
+
+
 <form method="get">
     <div class="input-group">
         <input class="form-control" asp-for="SearchTerm">
@@ -105,11 +116,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CompanyLastName)
             </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.CompanyId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.CompanyId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.CompanyId">Delete</a>
-            </td>
+            
+                @if (string.IsNullOrEmpty(userId))
+                {
+
+                }
+                else
+                {
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.CompanyId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.CompanyId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.CompanyId">Delete</a>
+                    </td>
+                }
         </tr>
 }
     </tbody>

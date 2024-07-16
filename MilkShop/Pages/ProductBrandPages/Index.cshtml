@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    var userId = HttpContext.Session.GetString("UserID");
 }
 
 <!-- Single Page Header start -->
@@ -17,10 +18,17 @@
 <!-- Single Page Header End -->
 <div class="container">
     <h1>ProductBrands</h1>
+    @if (string.IsNullOrEmpty(userId))
+    {
 
-    <p>
-        <a class="btn btn-sm btn-outline-primary" asp-page="Create">Create New</a>
-    </p>
+    }
+    else
+    {
+        <p>
+            <a class="btn btn-sm btn-outline-primary" asp-page="Create">Create New</a>
+        </p>
+    }
+    
     <form method="get">
         <div class="input-group">
             <input class="form-control" asp-for="SearchTerm">
@@ -94,11 +102,18 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Address)
                     </td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Edit</a> |
-                        <a asp-page="./Details" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Delete</a>
-                    </td>
+                    
+                    @if (string.IsNullOrEmpty(userId))
+                    {
+                    }
+                    else
+                    {
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Edit</a> |
+                            <a asp-page="./Details" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Details</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Delete</a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

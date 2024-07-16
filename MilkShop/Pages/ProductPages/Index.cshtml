@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Product";
+    var userId = HttpContext.Session.GetString("UserID");
 }
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
@@ -152,9 +153,17 @@
 
 <h1>Product</h1>
 
-<p>
-    <a class="btn btn-sm btn-outline-primary" asp-page="Create">Create New</a>
-</p>
+@if (string.IsNullOrEmpty(userId))
+{
+
+}
+else
+{
+    <p>
+        <a class="btn btn-sm btn-outline-primary" asp-page="Create">Create New</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -219,11 +228,18 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ProductCategory.ProductCategoryName)
                 </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <a asp-page="./Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Details</a>
-                    <a asp-page="./Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Delete</a>
-                </td>
+                @if (string.IsNullOrEmpty(userId))
+                {
+                }
+                else
+                {
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a asp-page="./Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Details</a>
+                        <a asp-page="./Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-outline-primary">Delete</a>
+                    </td>
+                }
+                
             </tr>
         }
     </tbody>
