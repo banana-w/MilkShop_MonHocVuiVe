@@ -2,6 +2,7 @@
 @model MilkShop.Pages.OrderPages.IndexModel
 @{
     ViewData["Title"] = "Index";
+    var userId = HttpContext.Session.GetString("UserID");
 }
 <!-- Single Page Header start -->
 <div class="container-fluid page-header py-5">
@@ -14,12 +15,20 @@
 </div>
 <!-- Single Page Header End -->
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Order List</h1>
-    <a asp-page="Create" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-1"></i>Create New
-    </a>
-</div>
+
+@if (string.IsNullOrEmpty(userId))
+{
+
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Order List</h1>
+        <a asp-page="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Create New
+        </a>
+    </div>
+}
 
 <form method="get">
     <div class="input-group">
@@ -109,17 +118,23 @@
                     <td>@Html.DisplayFor(modelItem => item.ShippingMethod)</td>
                     <td>@Html.DisplayFor(modelItem => item.User.UserName)</td>
                     <td class="text-center">
-                        <div class="d-flex justify-content-center">
-                            <a asp-page="./Edit" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-primary mx-1" title="Edit">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a asp-page="./Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-info mx-1" title="Details">
-                                <i class="bi bi-info-circle"></i>
-                            </a>
-                            <a asp-page="./Delete" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-danger mx-1" title="Delete">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </div>
+                        @if (string.IsNullOrEmpty(userId))
+                        {
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-center">
+                                <a asp-page="./Edit" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-primary mx-1" title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-page="./Details" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-info mx-1" title="Details">
+                                    <i class="bi bi-info-circle"></i>
+                                </a>
+                                <a asp-page="./Delete" asp-route-id="@item.OrderId" class="btn btn-sm btn-outline-danger mx-1" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        }
                     </td>
                 </tr>
             }
