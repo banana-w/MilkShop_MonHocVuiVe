@@ -37,7 +37,7 @@
             </div>
         </div>
     </form>
-
+    
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -101,19 +101,19 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Address)
-                    </td>
-                    
+                    </td>                    
                     @if (string.IsNullOrEmpty(userId))
                     {
                     }
                     else
                     {
                         <td>
-                            <a asp-page="./Edit" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Edit</a> |
-                            <a asp-page="./Details" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Details</a> |
+                            <a asp-page="./Edit" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-page="./Details" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Details</a>
                             <a asp-page="./Delete" asp-route-id="@item.ProductBrandId" class="btn btn-sm btn-outline-primary">Delete</a>
                         </td>
                     }
+
                 </tr>
             }
         </tbody>
