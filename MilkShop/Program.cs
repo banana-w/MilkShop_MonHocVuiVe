@@ -7,6 +7,9 @@ using MilkShopBusiness.ProductBusiness;
 using MilkShop.Business.LoginBusiness;
 using MilkShop.Data.Repository;
 using MilkShop.Business.CompanyBusiness;
+using System.Configuration;
+using WebAPI.Util;
+using MilkShop.Data.VNPay;
 
 namespace MilkShop
 {
@@ -38,6 +41,9 @@ namespace MilkShop
             builder.Services.AddScoped<ILoginRepository, LoginRepository>();
             builder.Services.AddScoped<ILoginBusiness, LoginBusiness>();
             builder.Services.AddScoped<ICompanyBusiness, CompanyBusiness>();
+            // VNPay setting 
+            builder.Services.AddSingleton<VNPayHelper>();
+            builder.Services.Configure<VNPaySettings>(builder.Configuration.GetSection("VNPaySettings"));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
