@@ -23,6 +23,7 @@ namespace MilkShop.Business.OrderBusinesses
         Task<IBusinessResult> Save(Order order);
         Task<IBusinessResult> DeleteAsync(int id);
         Task<IBusinessResult> Search(string searchTerm, int page, int size);
+        Task<IBusinessResult> GetCountOrder(DateTime fromDate, DateTime toDate);
     }
 
     public class OrderBusiness : IOrderBusiness
@@ -215,6 +216,29 @@ namespace MilkShop.Business.OrderBusinesses
             catch (Exception ex)
             {
                 return new BusinessResult(-4, ex.Message);
+            }
+        }
+
+        public async Task<IBusinessResult> GetCountOrder(DateTime fromDate, DateTime toDate)
+        {
+            try
+            {
+                // Đảm bảo fromDate luôn nhỏ hơn hoặc bằng toDate
+                if (fromDate > toDate)
+                {
+                    return new BusinessResult(0, "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc");
+                }
+
+                // Truy vấn số lượng đơn hàng
+                int count = await _unitOfWork.OrderRepository.CountAsync(
+                    predicate: o => o.OrderDate >= fromDate.Date && o.OrderDate <= toDate.Date.AddDays(1).AddTicks(-1)
+                );
+
+                return new BusinessResult(1, "Lấy số lượng đơn hàng thành công", count);
+            }
+            catch (Exception ex)
+            {
+                return new BusinessResult(-4, $"Lỗi khi đếm số đơn hàng: {ex.Message}");
             }
         }
     }

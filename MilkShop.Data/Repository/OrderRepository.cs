@@ -4,6 +4,7 @@ using MilkShop.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,10 @@ namespace MilkShop.Data.Repository
         public async Task<List<Order>> GetListOrder()
         {
             return await _context.Orders.Include(x => x.User).ToListAsync();
+        }
+        public async Task<int> CountAsync(Expression<Func<Order, bool>> predicate)
+        {
+            return await _context.Orders.CountAsync(predicate);
         }
     }
 }

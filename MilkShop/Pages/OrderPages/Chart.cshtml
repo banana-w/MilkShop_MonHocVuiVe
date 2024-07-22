@@ -1,0 +1,136 @@
+﻿@page
+@model MilkShop.Pages.OrderPages.ChartModel
+@{
+    ViewData["Title"] = "Biểu đồ đơn hàng";
+    <style>
+        .chart-container {
+            height: 400px; /* Điều chỉnh chiều cao này theo nhu cầu của bạn */
+        }
+    </style>
+}
+
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Checkout</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+        <li class="breadcrumb-item active text-white">Checkout</li>
+    </ol>
+</div>
+<h2>@ViewData["Title"]</h2>
+
+<form method="get">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label asp-for="FromDate">Từ ngày:</label>
+                <input asp-for="FromDate" class="form-control" type="date" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label asp-for="ToDate">Đến ngày:</label>
+                <input asp-for="ToDate" class="form-control" type="date" />
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary form-control">Xem biểu đồ</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="chart-container">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="chart-container">
+            <canvas id="lineChart"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var labels = @Json.Serialize(Model.DateLabels);
+        var data = @Json.Serialize(Model.OrderCounts);
+
+        function createChart(canvasId, type) {
+            var ctx = document.getElementById(canvasId).getContext('2d');
+            return new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số lượng đơn hàng',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số lượng đơn hàng'
+                            },
+                            ticks: {
+                                // Tăng số lượng điểm chia trên trục y
+                                stepSize: Math.ceil(Math.max(...data) / 10)
+                            },
+                            // Đảm bảo trục y luôn kéo dài đến đỉnh của container
+                            grid: {
+                                drawBorder: false,
+                                color: function (context) {
+                                    if (context.tick.value === 0) {
+                                        return 'rgba(0, 0, 0, 0.1)';
+                                    }
+                                    return 'rgba(0, 0, 0, 0.05)';
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Ngày'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Biểu đồ đơn hàng từ @Model.FromDate.ToShortDateString() đến @Model.ToDate.ToShortDateString()'
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            top: 20,
+                            right: 20,
+                            bottom: 20,
+                            left: 20
+                        }
+                    }
+                }
+            });
+        }
+
+        var barChart = createChart('barChart', 'bar');
+        var lineChart = createChart('lineChart', 'line');
+    </script>
+}
+}
+}
