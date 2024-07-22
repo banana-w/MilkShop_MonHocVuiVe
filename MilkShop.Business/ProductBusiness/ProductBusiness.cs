@@ -1,13 +1,14 @@
-﻿using Azure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MilkShop.Common;
 using MilkShop.Data;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
 using MilkShopBusiness.Base;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace MilkShopBusiness.ProductBusiness
         Task<IBusinessResult> UpdateAsync(Product product);
         Task<IBusinessResult> Save(Product product);
         Task<IBusinessResult> DeleteAsync(int id);
-        Task<IBusinessResult> Search(string searchTerm, int page, int size);
+        Task<IBusinessResult> Search(string searchTerm, int brandId, int cateId, decimal price, int page, int size, int sortEnum);
     }
 
     public class ProductBusiness : IProductBusiness
@@ -171,18 +172,42 @@ namespace MilkShopBusiness.ProductBusiness
             }
         }
 
-        public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
+        public async Task<IBusinessResult> Search(string searchTerm, int brandId, int cateId, decimal price, int page, int size, int sortEnum)
         {
             try
             {
-                var productBrands = await _unitOfWork.ProductRepository.GetPagingListAsync(
-                    selector: x => x,
-                    predicate: x => x.ProductName.Contains(searchTerm),
-                    page: page,
-                    size: size,
-                    include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
-                    );
-
+                var productBrands = new Paginate<Product>();
+                if (sortEnum == 0)
+                {
+                    productBrands = await _unitOfWork.ProductRepository.GetPagingListAsync(
+                        selector: x => x,
+                        predicate: HandleProductFilter(searchTerm, brandId, cateId, price),
+                        page: page,
+                        size: size,
+                        include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory)
+                        );
+                }
+                else if (sortEnum == 1)
+                {
+                    productBrands = await _unitOfWork.ProductRepository.GetPagingListAsync(
+                        selector: x => x,
+                        predicate: HandleProductFilter(searchTerm, brandId, cateId, price),
+                        page: page,
+                        size: size,
+                        include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory),
+                        orderBy: x => x.OrderBy(p => p.ProductPrice)
+                        );
+                }else
+                {
+                    productBrands = await _unitOfWork.ProductRepository.GetPagingListAsync(
+                        selector: x => x,
+                        predicate: HandleProductFilter(searchTerm, brandId, cateId, price),
+                        page: page,
+                        size: size,
+                        include: x => x.Include(p => p.ProductBrand).Include(p => p.ProductCategory),
+                        orderBy: x => x.OrderByDescending(p => p.ProductPrice)
+                        );
+                }
                 if (productBrands != null)
                 {
                     return new BusinessResult(1, "Create successfully", productBrands);
@@ -197,6 +222,37 @@ namespace MilkShopBusiness.ProductBusiness
                 return new BusinessResult(-4, ex.Message);
             }
         }
+        public Expression<Func<Product, bool>> HandleProductFilter(
+                        string searchTerm, int brandId, int cateId, decimal price)
+        {
+            // Start with a base expression that always returns true
+            Expression<Func<Product, bool>> filterParam = el => true;
+
+            // Combine expressions using logical AND operators
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                filterParam = filterParam.And(el => el.ProductName.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            if (brandId != 0)
+            {
+                filterParam = filterParam.And(el => el.ProductBrandId == brandId);
+            }
+
+            if (cateId != 0)
+            {
+                filterParam = filterParam.And(el => el.ProductCategoryId == cateId);
+            }
+
+            if (price > 0)
+            {
+                filterParam = filterParam.And(el => el.ProductPrice == price);
+            }
+
+            return filterParam;
+        }
+        
+
 
         public async Task<IBusinessResult> UpdateAsync(Product product)
         {

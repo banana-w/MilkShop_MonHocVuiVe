@@ -63,6 +63,11 @@
                     <span asp-validation-for="Product.StockQuantity" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="Product.CreatedDate" class="control-label"></label>
+                    <input asp-for="Product.CreatedDate" class="form-control" readonly/>
+                    <span asp-validation-for="Product.CreatedDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
             </form>
@@ -73,6 +78,15 @@
         <a asp-page="Index">Back to List</a>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var createdDateInput = document.querySelector('input[name="Product.CreatedDate"]');
+        if (createdDateInput) {
+            var today = new Date().toISOString().split('T')[0];
+            createdDateInput.value = today;
+        }
+    });
+</script>
 
 @section Scripts {
     @{
