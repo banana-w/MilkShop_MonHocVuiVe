@@ -55,6 +55,7 @@ namespace MilkShop.Pages.OrderPages
 
         public async Task OnGetAsync()
         {
+            ViewData["Message"] = TempData["Message"];
            if(!string.IsNullOrEmpty(SearchTerm))
             {
                 Order = await Search();
