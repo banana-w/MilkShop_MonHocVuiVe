@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,15 @@ namespace MilkShop.Data.Paging
                 Items = items,
                 TotalPages = totalPages
             };
+        }
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> expression1,
+            Expression<Func<T, bool>> expression2)
+        {
+            InvocationExpression invocationExpression =
+                Expression.Invoke((Expression)expression2, expression1.Parameters.Cast<Expression>());
+            return Expression.Lambda<Func<T, bool>>(
+                (Expression)Expression.AndAlso(expression1.Body, (Expression)invocationExpression),
+                (IEnumerable<ParameterExpression>)expression1.Parameters);
         }
     }
 }
