@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using MilkShop.Data.VNPay;
+using System.Net.Mail;
+using System.Net;
 using System.Web;
 using WebAPI.Util;
 
@@ -60,6 +63,28 @@ namespace MilkShop.Pages.OrderPages
                     // Order order = await _orderRepository.GetByOrderIdAsync((int)orderInfor);
                     if (vnp_ResponseCode == "00")
                     {
+                        
+                            using (var client = new SmtpClient("smtp.gmail.com"))
+                            {
+                                client.Port = 587;
+                                client.Credentials = new NetworkCredential("dokhoa031103@gmail.com", "eint cjww oxel jzxq");
+                                client.EnableSsl = true;
+
+                                var message = new MailMessage
+                                {
+                                    From = new MailAddress("dokhoa031103@gmail.com"),
+                                    Subject = "Confirm Order",
+                                    Body = "Thank you for your order !",
+                                    IsBodyHtml = false,
+                                };
+                                message.To.Add("phuonghiepthuan56@gmail.com");
+
+                                client.Send(message);
+                            }
+
+                            
+                        
+                        
                         // Payment successful
                         // var transaction = await _transactionRepository.GetByIdAsync((int)orderInfor);
                         // transaction.Status = true;
