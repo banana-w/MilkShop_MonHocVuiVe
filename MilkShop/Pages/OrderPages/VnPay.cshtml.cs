@@ -64,24 +64,28 @@ namespace MilkShop.Pages.OrderPages
                     // Order order = await _orderRepository.GetByOrderIdAsync((int)orderInfor);
                     if (vnp_ResponseCode == "00")
                     {
-
-                        using (var client = new SmtpClient("smtp.gmail.com"))
-                        {
-                            client.Port = 587;
-                            client.Credentials = new NetworkCredential("dokhoa031103@gmail.com", "eint cjww oxel jzxq");
-                            client.EnableSsl = true;
-
-                            var message = new MailMessage
+                        
+                            using (var client = new SmtpClient("smtp.gmail.com"))
                             {
-                                From = new MailAddress("dokhoa031103@gmail.com"),
-                                Subject = "Confirm Order",
-                                Body = "Thank you for your order !",
-                                IsBodyHtml = false,
-                            };
-                            message.To.Add("phuonghiepthuan56@gmail.com");
+                                client.Port = 587;
+                                client.Credentials = new NetworkCredential("dokhoa031103@gmail.com", "eint cjww oxel jzxq");
+                                client.EnableSsl = true;
 
-                            client.Send(message);
-                        }
+                                var message = new MailMessage
+                                {
+                                    From = new MailAddress("dokhoa031103@gmail.com"),
+                                    Subject = "Confirm Order",
+                                    Body = "Thank you for your order !",
+                                    IsBodyHtml = false,
+                                };
+                                message.To.Add("phuonghiepthuan56@gmail.com");
+
+                                client.Send(message);
+                            }
+
+                            
+                        
+                        
                         // Payment successful
                         // var transaction = await _transactionRepository.GetByIdAsync((int)orderInfor);
                         // transaction.Status = true;
