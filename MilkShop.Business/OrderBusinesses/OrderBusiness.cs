@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using MilkShop.Business.OrderDetailBusinesses;
 using MilkShop.Data;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
 using MilkShopBusiness.Base;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +24,7 @@ namespace MilkShop.Business.OrderBusinesses
         Task<IBusinessResult> UpdateAsync(Order order);
         Task<IBusinessResult> Save(Order order);
         Task<IBusinessResult> DeleteAsync(int id);
-        Task<IBusinessResult> Search(string searchTerm, int page, int size);
+        Task<IBusinessResult> Search(string searchTerm, decimal price, int page, int size);
         Task<IBusinessResult> GetCountOrder(DateTime fromDate, DateTime toDate);
     }
 
@@ -173,13 +175,13 @@ namespace MilkShop.Business.OrderBusinesses
             }
         }
 
-        public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
+        public async Task<IBusinessResult> Search(string searchTerm, decimal price, int page, int size)
         {
             try
             {
                 var order = await _unitOfWork.OrderRepository.GetPagingListAsync(
                     selector: x => x,
-                    predicate: x => x.OrderStatus.Contains(searchTerm),
+                    predicate: HandleProductFilter(searchTerm, price),
                     page: page,
                     size: size
                     );
@@ -197,6 +199,25 @@ namespace MilkShop.Business.OrderBusinesses
             {
                 return new BusinessResult(-4, ex.Message);
             }
+        }
+        public Expression<Func<Order, bool>> HandleProductFilter(
+                        string searchTerm, decimal price)
+        {
+            // Start with a base expression that always returns true
+            Expression<Func<Order, bool>> filterParam = el => true;
+
+            // Combine expressions using logical AND operators
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                filterParam = filterParam.And(el => el.ShippingAddress.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            if (price > 0)
+            {
+                filterParam = filterParam.And(el => el.OrderTotalAmount <= price);
+            }
+
+            return filterParam;
         }
 
         public async Task<IBusinessResult> UpdateAsync(Order order)
