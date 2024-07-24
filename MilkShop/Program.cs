@@ -10,6 +10,9 @@ using MilkShop.Business.CompanyBusiness;
 using System.Configuration;
 using WebAPI.Util;
 using MilkShop.Data.VNPay;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Extensions.Options;
 
 namespace MilkShop
 {
@@ -44,7 +47,24 @@ namespace MilkShop
             // VNPay setting 
             builder.Services.AddSingleton<VNPayHelper>();
             builder.Services.Configure<VNPaySettings>(builder.Configuration.GetSection("VNPaySettings"));
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddGoogle(googleOptions =>
+            {
+            googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            googleOptions.CallbackPath = "/signin-google"; 
+
+            });
+
+
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -59,6 +79,7 @@ namespace MilkShop
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
             app.MapRazorPages();

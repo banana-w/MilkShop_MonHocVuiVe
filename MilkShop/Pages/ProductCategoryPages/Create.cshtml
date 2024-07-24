@@ -40,12 +40,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProductCategory.Status" class="control-label"></label>
-                <input asp-for="ProductCategory.Status" class="form-control" />
+                <select asp-for="ProductCategory.Status" class="form-control">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
                 <span asp-validation-for="ProductCategory.Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductCategory.CreatedDate" class="control-label"></label>
-                <input asp-for="ProductCategory.CreatedDate" class="form-control" />
+                <input type="date" asp-for="ProductCategory.CreatedDate" class="form-control" />
                 <span asp-validation-for="ProductCategory.CreatedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,7 +58,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProductCategory.UpdatedDate" class="control-label"></label>
-                <input asp-for="ProductCategory.UpdatedDate" class="form-control" />
+                <input type="date" asp-for="ProductCategory.UpdatedDate" class="form-control" />
                 <span asp-validation-for="ProductCategory.UpdatedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -65,7 +68,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProductCategory.CategoryLevel" class="control-label"></label>
-                <input asp-for="ProductCategory.CategoryLevel" class="form-control" />
+                <input asp-for="ProductCategory.CategoryLevel" class="form-control" type="number" />
                 <span asp-validation-for="ProductCategory.CategoryLevel" class="text-danger"></span>
             </div>
             <div class="form-group">

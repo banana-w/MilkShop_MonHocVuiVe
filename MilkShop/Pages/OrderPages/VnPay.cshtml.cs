@@ -30,10 +30,11 @@ namespace MilkShop.Pages.OrderPages
                 TempData.Remove("CartData");
                 TempData.Remove("TotalAmount");
                 return RedirectToPage("/OrderPages/Index");
-            } else
+            }
+            else
             {
                 TempData["Message"] = "Bạn đã hủy thanh toán";
-               return RedirectToPage("/OrderPages/Create");
+                return RedirectToPage("/OrderPages/Create");
             }
         }
         public async Task<string> PaymentConfirm()

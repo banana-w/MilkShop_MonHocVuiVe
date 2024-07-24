@@ -12,10 +12,14 @@ namespace MilkShop.Data.Repository
     public interface ILoginRepository
     {
         Customer checkLogin(string userName, string password);
+        Customer checkLoginByEmail(string userEmail, string password);
     }
 
     public class LoginRepository : ILoginRepository
     {
         public Customer checkLogin(string userName, string password) => LoginDAO.Instance.checkLogin(userName, password);
+        public Customer checkLoginByEmail(string userEmail, string password) => LoginDAO.Instance.checkLoginEmail(userEmail, password);
+
     }
+
 }
