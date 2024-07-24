@@ -27,6 +27,8 @@ namespace MilkShop.Pages.OrderPages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
         [BindProperty(SupportsGet = true)]
+        public decimal Price { get; set; }
+        [BindProperty(SupportsGet = true)]
 
         public int PageIndex { get; set; } = 1;
         [BindProperty(SupportsGet = true)]
@@ -46,7 +48,7 @@ namespace MilkShop.Pages.OrderPages
 
         private async Task<Paginate<Order>> Search()
         {
-            var result = await _orderBusiness.Search(SearchTerm, PageIndex, Size);
+            var result = await _orderBusiness.Search(SearchTerm, Price, PageIndex, Size);
             if (result.Status > 0 && result.Data != null)
             {
                 var order = result.Data;

@@ -246,7 +246,7 @@ namespace MilkShopBusiness.ProductBusiness
 
             if (price > 0)
             {
-                filterParam = filterParam.And(el => el.ProductPrice == price);
+                filterParam = filterParam.And(el => el.ProductPrice <= price);
             }
 
             return filterParam;
