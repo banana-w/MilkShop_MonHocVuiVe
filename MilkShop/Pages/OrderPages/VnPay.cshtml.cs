@@ -30,10 +30,11 @@ namespace MilkShop.Pages.OrderPages
                 TempData.Remove("CartData");
                 TempData.Remove("TotalAmount");
                 return RedirectToPage("/OrderPages/Index");
-            } else
+            }
+            else
             {
                 TempData["Message"] = "Bạn đã hủy thanh toán";
-               return RedirectToPage("/OrderPages/Create");
+                return RedirectToPage("/OrderPages/Create");
             }
         }
         public async Task<string> PaymentConfirm()
@@ -64,23 +65,23 @@ namespace MilkShop.Pages.OrderPages
                     if (vnp_ResponseCode == "00")
                     {
 
-                     using (var client = new SmtpClient("smtp.gmail.com"))
- {
-     client.Port = 587;
-     client.Credentials = new NetworkCredential("dokhoa031103@gmail.com", "eint cjww oxel jzxq");
-     client.EnableSsl = true;
+                        using (var client = new SmtpClient("smtp.gmail.com"))
+                        {
+                            client.Port = 587;
+                            client.Credentials = new NetworkCredential("dokhoa031103@gmail.com", "eint cjww oxel jzxq");
+                            client.EnableSsl = true;
 
-     var message = new MailMessage
-     {
-         From = new MailAddress("dokhoa031103@gmail.com"),
-         Subject = "Confirm Order",
-         Body = "Thank you for your order !",
-         IsBodyHtml = false,
-     };
-     message.To.Add("phuonghiepthuan56@gmail.com");
+                            var message = new MailMessage
+                            {
+                                From = new MailAddress("dokhoa031103@gmail.com"),
+                                Subject = "Confirm Order",
+                                Body = "Thank you for your order !",
+                                IsBodyHtml = false,
+                            };
+                            message.To.Add("phuonghiepthuan56@gmail.com");
 
-     client.Send(message);
- }
+                            client.Send(message);
+                        }
                         // Payment successful
                         // var transaction = await _transactionRepository.GetByIdAsync((int)orderInfor);
                         // transaction.Status = true;

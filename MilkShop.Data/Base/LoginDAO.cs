@@ -53,5 +53,19 @@ namespace MilkShop.Data.Base
             }
         }
 
+        public Customer checkLoginEmail(string userName, string password)
+        {
+            try
+            {
+                var check = _context.Customers.Where(u => u.UserEmail!.Equals(userName) && u.Password!.Equals(password)).FirstOrDefault();
+
+                    return check;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }
