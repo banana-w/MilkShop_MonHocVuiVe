@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MilkShop.Data;
 using MilkShop.Data.Models;
+using MilkShop.Data.Paging;
 using MilkShopBusiness.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +20,7 @@ namespace MilkShop.Business.CustomerBusiness
         Task<IBusinessResult> Save(Customer customer);
         Task<IBusinessResult> DeleteAsync(int id);
         Task<IBusinessResult> DeleteCustomer(int id);
-        Task<IBusinessResult> Search(string searchTerm, int page, int size);
+        Task<IBusinessResult> Search(string name, string email, int page, int size);
         Task<IBusinessResult> GetAllCustomer();
 
     }
@@ -103,13 +105,13 @@ namespace MilkShop.Business.CustomerBusiness
             }
         }
 
-        public async Task<IBusinessResult> Search(string searchTerm, int page, int size)
+        public async Task<IBusinessResult> Search(string name, string email, int page, int size)
         {
             try
             {
                 var customer = await _unitOfWork.CustomerRepository.GetPagingListAsync(
                     selector: x => x,
-                    predicate: x => x.UserName.Contains(searchTerm),
+                    predicate: HandleProductFilter(name, email),
                     page: page,
                     size: size
                     );
@@ -127,6 +129,25 @@ namespace MilkShop.Business.CustomerBusiness
             {
                 return new BusinessResult(-4, ex.Message);
             }
+        }
+
+        public Expression<Func<Customer, bool>> HandleProductFilter(
+        string name, string email)
+        {
+            Expression<Func<Customer, bool>> filterParam = el => true;
+
+            // Combine expressions using logical AND operators
+            if (!string.IsNullOrEmpty(name))
+            {
+                filterParam = filterParam.And(el => el.UserName.ToLower().Contains(name.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                filterParam = filterParam.And(el => el.UserEmail.ToLower().Contains(email.ToLower()));
+            }
+
+            return filterParam;
         }
 
         public async Task<IBusinessResult> GetByIdAsync(int id)

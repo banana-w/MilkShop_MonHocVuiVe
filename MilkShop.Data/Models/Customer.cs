@@ -18,7 +18,7 @@ public partial class Customer
 
     public DateOnly? CreatedDate { get; set; }
 
-    [RegularExpression(@"^\+?[1-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
+    [RegularExpression(@"^\+?[0-9]\d{1,14}$", ErrorMessage = "Invalid phone number format.")]
 
     public string? PhoneNumber { get; set; }
 

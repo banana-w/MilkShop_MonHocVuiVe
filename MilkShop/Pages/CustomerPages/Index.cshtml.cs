@@ -24,7 +24,11 @@ namespace MilkShop.Pages.CustomerPages
         public string Message { get; set; } = default!;
         public Paginate<Customer> Customer { get; set; } = default!;
         [BindProperty(SupportsGet = true)]
-        public string SearchTerm { get; set; }
+
+        public string Name { get; set; }
+        [BindProperty(SupportsGet = true)]
+
+        public string Email { get; set; }
         [BindProperty(SupportsGet = true)]
         public int PageIndex { get; set; } = 1;
         [BindProperty(SupportsGet = true)]
@@ -43,7 +47,7 @@ namespace MilkShop.Pages.CustomerPages
 
         private async Task<Paginate<Customer>> Search()
         {
-            var result = await _customerBusiness.Search(SearchTerm, PageIndex, Size);
+            var result = await _customerBusiness.Search(Name, Email, PageIndex, Size);
             if (result.Status > 0 && result.Data != null)
             {
                 var customer = result.Data;
@@ -53,7 +57,7 @@ namespace MilkShop.Pages.CustomerPages
         }
         public async Task OnGetAsync()
         {
-            if (!string.IsNullOrEmpty(SearchTerm))
+            if (!string.IsNullOrEmpty(Name) || !string.IsNullOrEmpty(Email))
             {
                 Customer = await Search();
             }
