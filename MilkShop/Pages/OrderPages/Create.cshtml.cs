@@ -129,7 +129,7 @@ namespace MilkShop.Pages.OrderPages
             {
                 await _orderDetailBusiness.Add(orderDetail);
             }
-            var url = await Payment("100000", "Hello");
+            var url = await Payment("100000", "thanh toan");
             // Xóa giỏ hàng sau khi tạo đơn hàng thành công
             //HttpContext.Session.Remove("Cart");
             //HttpContext.Session.Remove("cartQuantity");

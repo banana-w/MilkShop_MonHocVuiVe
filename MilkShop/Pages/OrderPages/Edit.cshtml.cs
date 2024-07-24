@@ -38,7 +38,7 @@ namespace MilkShop.Pages.OrderPages
                 return NotFound();
             }
             Order = order;
-           ViewData["UserId"] = new SelectList(_context.Customers, "UserId", "UserId");
+           ViewData["UserId"] = new SelectList(_context.Customers, "UserId", "UserName");
             return Page();
         }
 
